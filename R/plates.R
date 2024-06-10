@@ -1,27 +1,24 @@
-#' Genereate complete columns
+#' Generate complete columns
 #'
 #' @param col column index
 #'
 #' @return numeric vector
+#' @export
 #'
-#' @examples
-#' generate_full_col(col = 3)
-generate_full_col <- function(col) {
-  min_num <- ifelse(col == 0, 1, 0)
-  max_num <- ifelse(col == 8, 10, 9)
+full_col <- function(col) {
+  min <- ifelse(col == 0, 1, 0)
+  max <- ifelse(col == 8, 10, 9)
 
-  sort(sample(seq(min_num, max_num), size = 3)) + col * 10
+  sort(sample(seq(min, max), size = 3)) + col * 10
 }
 
 
-#' Eliminate elements in columns to fullfill criteria for plates
+#' Eliminate elements in columns to apply to plates criteria
 #'
 #' @param cols tibble of complete columns
 #'
-#' @return
+#' @return tibble
 #' @export
-#'
-#' @examples
 eliminate <- function(cols) {
   # first two rows
   for (i in 1:2) {
@@ -39,9 +36,10 @@ eliminate <- function(cols) {
 #' @export
 #'
 #' @examples
+#' generate()
 generate <- function() {
   seq(0, 8) |>
-    purrr::map(generate_full_col) |>
+    purrr::map(full_col) |>
     dplyr::bind_cols(.name_repair = "unique_quiet") |>
     eliminate()
 }
@@ -111,7 +109,7 @@ is_unique_plate <- function(p, l) {
 #' @param data data frame, tibble or vector.
 #' @param no_nas remove NAs. Default is TRUE
 #'
-#' @return
+#' @return vector
 #' @export
 #'
 #' @examples

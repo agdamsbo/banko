@@ -10,3 +10,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/agdamsbo/banko
 BugReports: https://github.com/agdamsbo/banko/issues
+RoxygenNote: 7.3.1
+Imports: 
+    dplyr,
+    purrr
