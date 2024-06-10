@@ -1,6 +1,4 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # banko
 
 <!-- badges: start -->
@@ -43,22 +41,7 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(banko)
-plates(2)
-#> [[1]]
-#> # A tibble: 3 × 9
-#>    ...1  ...2  ...3  ...4  ...5  ...6  ...7  ...8  ...9
-#>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-#> 1     3    12    21    NA    40    53    NA    NA    NA
-#> 2     4    16    24    NA    NA    56    NA    78    NA
-#> 3    NA    18    26    39    NA    NA    69    NA    83
-#> 
-#> [[2]]
-#> # A tibble: 3 × 9
-#>    ...1  ...2  ...3  ...4  ...5  ...6  ...7  ...8  ...9
-#>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-#> 1    NA    NA    NA    32    41    NA    63    70    82
-#> 2    NA    17    24    NA    47    52    NA    72    NA
-#> 3     6    19    NA    NA    48    NA    69    74    NA
+plates(5)
 ```
 
 ## Code of Conduct
