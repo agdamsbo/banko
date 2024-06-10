@@ -1,0 +1,10 @@
+Package: banko
+Type: Package
+Title: banko game
+Version: 0.1.0
+Authors@R: 
+    person(given="Andreas Gammelgaard", family="Damsbo", email="andreas@gdamsbo.dk", role = c("aut", "cre"))
+Description: Play Danish banko. Very much inspired from https://github.com/skipperkongen/banko/.
+License: AGPL (>= 3)
+Encoding: UTF-8
+LazyData: true
