@@ -8,3 +8,5 @@ Description: Play Danish banko. Very much inspired from https://github.com/skipp
 License: AGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/agdamsbo/banko
+BugReports: https://github.com/agdamsbo/banko/issues
