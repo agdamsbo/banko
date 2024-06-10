@@ -132,4 +132,3 @@ get_sequence <- function(data,no_nas=TRUE) {
   }
 }
 
-# Source: https://github.com/skipperkongen/banko/blob/main/src/banko/algorithms.py
