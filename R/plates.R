@@ -38,36 +38,36 @@ eliminate <- function(cols) {
 #' @examples
 #' generate()
 generate <- function() {
-  seq(0, 8) |>
+  out <- seq(0, 8) |>
     purrr::map(full_col) |>
     dplyr::bind_cols(.name_repair = "unique_quiet") |>
     eliminate()
+  structure(out, class = c("banko", class(out)))
 }
 
 
 #' Creates n random plates. No checking of uniqueness
 #'
 #' @param n number of plates
+#' @param seed integer seed. Default is NULL. The used seed is saved as attribute.
 #'
 #' @return list
 #' @export
 #'
 #' @examples
-#' plates(5)
-plates <- function(n) {
+#' plates(5) |> purrr::map(\(.x) attr(.x,which = "banko_seed")) |> unique()
+#' attr(plates(5),which = "banko_seed" )
+plates <- function(n,seed=NULL) {
+  if (is.null(seed)) seed <- abs(sample(.Random.seed,1))
+
+  set.seed(seed)
+
   l <- list()
 
   # Repeats until n unique in list
   repeat{
-    if (length(l) == 0) {
-      # Just creates first
-      # This is easier on reading, but function actually handles empty list
-      # in comparison step
-      l[[1]] <- generate()
-    }
-
     # Generates new plate
-    p <- generate()
+    p <- structure(generate(),banko_seed=seed)
 
     # Tests if unique compared to rest in list before appending
     if (is_unique_plate(p, l)) {
@@ -80,7 +80,8 @@ plates <- function(n) {
     }
   }
   # outputs unique plates
-  l
+  structure(l,banko_seed=seed,
+            class=c("banko_list",class(l)))
 }
 
 
@@ -93,7 +94,7 @@ plates <- function(n) {
 #' @export
 #'
 #' @examples
-#' is_unique_plate(c(1,2,NA),list(c(2,4,6),c(1,NA,2)))
+#' is_unique_plate(c(1, 2, NA), list(c(2, 4, 6), c(1, NA, 2)))
 is_unique_plate <- function(p, l) {
   ## Tests only full sequence
   l |>
@@ -113,16 +114,16 @@ is_unique_plate <- function(p, l) {
 #' @export
 #'
 #' @examples
-#' data <- c(1,2,NA)
-#' get_sequence(c(1,NA,2))
-#' get_sequence(c(1,2,NA),FALSE)
-get_sequence <- function(data,no_nas=TRUE) {
+#' data <- c(1, 2, NA)
+#' get_sequence(c(1, NA, 2))
+#' get_sequence(c(1, 2, NA), FALSE)
+get_sequence <- function(data, no_nas = TRUE) {
   # To test completely unique, compare sequence without omitting
   out <- data |>
     as.matrix() |>
     as.vector()
 
-  if (no_nas){
+  if (no_nas) {
     out[which(!is.na(out))]
     # Not using na.omit(), as this appends attributes
   } else {
@@ -130,3 +131,21 @@ get_sequence <- function(data,no_nas=TRUE) {
   }
 }
 
+
+#' Extract unique numbers from plates and mix
+#'
+#' @param plates banko plates
+#'
+#' @return vector
+#' @export
+#'
+#' @examples
+#' plates(20) |> unique_numbers()
+unique_numbers <- function(plates) {
+  ns <- plates |>
+    purrr::map(\(.x) get_sequence(.x, no_nas = TRUE)) |>
+    purrr::list_c() |>
+    unique()
+
+  sample(ns, size = length(ns), replace = FALSE)
+}

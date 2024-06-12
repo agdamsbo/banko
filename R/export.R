@@ -1,0 +1,339 @@
+utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
+#' Base R style plotting
+#'
+#' @param data "banko" class object
+#'
+#' @return plot
+#' @export
+#'
+#' @examples
+#' plates(5) |> purrr::map(plot)
+#'
+#' plates(5)[[1]] |> plot()
+plot.banko <- function(data) {
+  old <- graphics::par(pty = "s", mar = c(0, 0, 0, 0))
+  ncol <- dim(data)[2]
+  nrow <- dim(data)[1]
+  on.exit(graphics::par(old))
+
+  graphics::plot(
+    c(0, 9),
+    c(0, -9),
+    type = "n",
+    xlab = "",
+    ylab = "",
+    axes = FALSE
+  )
+  graphics::rect(
+    col(data) - 1,
+    -row(data) + 1,
+    col(data),
+    -row(data),
+    col = NULL,
+    border = NULL
+  )
+  graphics::text(col(data) - 0.5,
+    -row(data) + 0.5,
+    get_sequence(data, no_nas = FALSE),
+    cex = 2,
+    col = "black",
+  )
+}
+
+#' Print banko plates with ggplot2
+#'
+#' @param data "banko" class object
+#' @param text.size size for number. Default is 14.
+#' @param title optional title for all plates
+#' @param note optional note for all plates
+#' @param id.hash add md5 hash to notes section
+#'
+#' @return ggplot2 list object
+#' @export
+#'
+#' @examples
+#' data <- plates(5)[[1]]
+#' data |> gg_plate()
+#' plates(5) |>
+#'   purrr::map(gg_plate) |>
+#'   patchwork::wrap_plots(ncol = 1)
+gg_plate <- function(data, text.size = 14, title = NULL, note = NULL, id.hash = FALSE) {
+  assertthat::assert_that("banko" %in% class(data))
+
+  d <- tibble::tibble(
+    text = get_sequence(data, no_nas = FALSE),
+    x1 = rep(0:8, each = 3),
+    x2 = rep(1:9, each = 3),
+    y1 = rep(2:0, times = 9),
+    y2 = rep(3:1, times = 9)
+  )
+
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_rect(
+      data = d,
+      ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2),
+      color = "black",
+      alpha = 0
+    ) +
+    ggplot2::geom_text(
+      data = d,
+      ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+      size = text.size, na.rm = TRUE
+    ) +
+    ggplot2::theme_void()
+
+  if (!is.null(title)) {
+    t <- tibble::tibble(
+      text = title,
+      x1 = 0,
+      x2 = 9,
+      y1 = 3,
+      y2 = 3.7
+    )
+    p <- p +
+      ggplot2::geom_rect(
+        data = t,
+        ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2),
+        color = "black", alpha = 0
+      ) +
+      ggplot2::geom_text(
+        data = t,
+        ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+        size = text.size
+      )
+  }
+
+  if (id.hash) {
+    note <- paste0(note, ". id: ", digest::digest(d, algo = "md5"))
+  }
+
+
+  if (!is.null(title)) {
+    t <- tibble::tibble(
+      text = note,
+      x1 = 0,
+      x2 = 9,
+      y1 = -.3,
+      y2 = 0
+    )
+    p <- p +
+      ggplot2::geom_rect(
+        data = t,
+        ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2),
+        color = "black", alpha = 0
+      ) +
+      ggplot2::geom_text(
+        data = t,
+        ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+        size = text.size / 2
+      )
+  }
+
+  structure(p,
+    class = c("gg_plate", class(p)),
+    banko_seed = attr(data, which = "banko_seed")
+  )
+}
+
+#' Iterative sequence
+#'
+#' @param i iteration
+#' @param n sequence size
+#'
+#' @return numeric vector
+#' @export
+#'
+#' @examples
+#' for (i in 1:2) print(seq_iter(i, 5))
+seq_iter <- function(i, n) {
+  seq((i - 1) * n + 1, i * n)
+}
+
+#' Multipage multiplate PDF export
+#'
+#' @param data list of gg_plate
+#' @param n number of plates per page
+#' @param note note to print on
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' # Not evaluated
+#' # plates(20) |> purrr::map(gg_plate) |> plates_grob() |> export_pdf(path = "banko_p{length(list)*5}.pdf")
+plates_grob <- function(data,
+                        n = 5,
+                        note = "agdamsbo/banko") {
+  assertthat::assert_that(
+    "gg_plate" %in% (purrr::map(data, class) |> purrr::list_c())
+  )
+
+  pl <- list()
+
+  for (i in seq_len(ceiling(length(data) / n))) {
+    pl[[i]] <- gridExtra::arrangeGrob(
+      grobs = data[seq_iter(i, n)],
+      ncol = 1, nrow = n,
+      left = grid::textGrob(glue::glue(note), gp = grid::gpar(fontsize = 10), rot = 90, vjust = 2)
+    )
+  }
+
+  structure(pl, class = c("arrangelist", class(data)))
+}
+
+#' Travebanko grob merge
+#'
+#' @param data
+#' @param stops
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data <- plates(10)
+#' l <- plates(30,5) |> travebanko(stops = 8)
+#' l |> export_pdf()
+travebanko <- function(data,
+                       stops,
+                       post.footer = "Opsat af FDF Bryrup den 1.6.24, nedtages samme dag. Kontakt: 24903612") {
+  plates_list <- data |>
+    sequence4one()
+
+
+  front <- plates_list |>
+    (\(.x){
+      stats_walk(.x[[1]], .x[[2]], stops = stops)
+    })()
+
+  signs <- plates_list[[2]] |> stops_walk(stops = stops)
+
+  signs_grob <- signs |>
+    purrr::map(\(.x){
+      l <- purrr::map2(.x, c(60, 50), \(.y, .i){
+        grid::textGrob(.y, gp = grid::gpar(fontsize = .i))
+      })
+      gridExtra::arrangeGrob(
+        grobs = l,
+        ncol = 1,
+        bottom = grid::textGrob(glue::glue(post.footer), gp = grid::gpar(fontsize = 10), vjust = -4)
+      )
+    }) |>
+    (\(.x) structure(.x, class = c("arrangelist", class(.x))))()
+
+  structure(
+    list(
+      front |> grid::textGrob(),
+      signs_grob,
+      data |> purrr::map(gg_plate) |> plates_grob()
+    ),
+    class = c("arrangelist", class(data)),
+    banko_seed = attr(data, which = "banko_seed")
+  )
+}
+
+
+
+#' Travebanko stats
+#'
+#' @param data list of plates and sequence
+#' @param stops n stops
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data <- plates_list
+stats_walk <- function(plates, sequence, stops) {
+  seed <- plates |> attr(which = "banko_seed")
+
+  summary_str <- n_complete_rows(plates, sequence) |>
+    factor(levels = 1:3, labels = c("One row", "Two rows", "Full plate")) |>
+    summary() |>
+    (\(.x){
+      paste(paste(names(.x), .x, sep = ": "), collapse = ", ")
+    })()
+
+  glue::glue(
+"God fornøjelse med travebanko\n\n
+Her er {length(plates)} plader og {stops} poster.\n
+Spillet er lavet sådan at alle får mindst en hel række.\n
+Gendan hele løbet med koden her (seed): {seed}\n\n
+Præmier: {summary_str}\n\n
+Talrække på poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |> purrr::list_c() |> paste(collapse='\n')}
+"
+  )
+}
+
+#' Travebanko stops
+#'
+#' @param data list of plates and sequence
+#' @param stops n stops
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data <- plates_list
+stops_walk <- function(sequence, stops) {
+  split_seq(sequence, n = stops) |>
+    purrr::imap(\(.x, .i){
+      list(
+        header = glue::glue("Post nr {.i}\n\n"),
+        numbers = split_seq(.x, l = 5) |> purrr::map(\(.y)paste(.y, collapse = "   ")) |>
+          glue::glue_collapse(sep = "\n")
+      )
+    })
+}
+
+#' Splits sequence in n groups of equal size or groups of max l
+#'
+#' @param sequence vector
+#' @param n number of groups. Ignored if l is specified.
+#' @param l max length of groups
+#' @param split.labels optional label for groups
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' split_seq(1:8, l = 3)
+split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
+  if (!is.null(l)) n <- ceiling(length(sequence) / l)
+
+  if (is.null(split.labels)) split.labels <- seq_len(n)
+
+  split(
+    sequence,
+    cut(seq_along(sequence),
+      breaks = n,
+      labels = split.labels
+    )
+  )
+}
+
+
+#' Print list of grobs as PDF
+#'
+#' @param list list of grobs to print
+#' @param path output path. glue string
+#' @param paper.width output paper width. Default is 210. Passed to ggsave.
+#' @param paper.height output paper height Default is 297. Passed to ggsave.
+#' @param paper.units output paper units Default is "mm". Passed to ggsave.
+#'
+#' @return NULL
+#' @export
+#'
+#' @examples
+export_pdf <- function(list,
+                       path = "banko_{attr(list, which = 'banko_seed')}.pdf",
+                       paper.width = 210,
+                       paper.height = 297,
+                       paper.units = "mm") {
+  ggplot2::ggsave(glue::glue(path),
+    list,
+    width = paper.width,
+    height = paper.height,
+    units = paper.units,
+    device = "pdf"
+  )
+}

@@ -16,11 +16,11 @@ Ideas are welcome, but please mind the code of conduct (see below).
 
 ## To do
 
-- Print plates and export as PDF
+- ~~Print plates and export as PDF~~ DONE
 
 - Host as Shiny app
 
-- Different game implementations (travebanko, others)
+- Different game implementations (~~travebanko~~ DONE, others)
 
 Banko is the Danish version of bingo, which is [nicely implemented in R
 here](https://github.com/jennybc/bingo).
@@ -37,11 +37,17 @@ devtools::install_github("agdamsbo/banko")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Create numbers for 5 plates:
 
 ``` r
 library(banko)
 plates(5)
+```
+
+Export 20 plates with 5 on each page as pdf:
+
+``` r
+plates(20) |> purrr::map(gg_plate) |> multiplate_pdf()
 ```
 
 ## Code of Conduct
