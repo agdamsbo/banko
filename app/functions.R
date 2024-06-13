@@ -173,6 +173,7 @@ utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
 
 
 
+
 plot.banko <- function(x, ...) {
   old <- graphics::par(pty = "s", mar = c(0, 0, 0, 0))
   ncol <- dim(x)[2]
@@ -202,7 +203,6 @@ plot.banko <- function(x, ...) {
     col = "black",
   )
 }
-
 
 
 
@@ -359,12 +359,12 @@ cards_grob <- function(data,
 
 
 
+
 travebanko <- function(data,
                        stops,
                        post.footer = "Please make a note when they were put up and taken down, if in public.") {
   cards_list <- data |>
     sequence4one()
-
 
   front <- cards_list |>
     (\(.x){
@@ -388,15 +388,14 @@ travebanko <- function(data,
 
   structure(
     list(
-      front |> grid::textGrob(),
+      front |> grid::textGrob() |> list(),
       signs_grob,
       data |> purrr::map(gg_card) |> cards_grob()
-    ),
+    ) |> unlist(recursive = FALSE),
     class = c("arrangelist", class(data)),
     banko_seed = attr(data, which = "banko_seed")
   )
 }
-
 
 
 
@@ -433,6 +432,10 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 "
   )
 }
+
+
+
+
 
 
 
@@ -491,6 +494,7 @@ split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
 
 export_pdf <- function(list,
                        path = "banko_{attr(list, which = 'banko_seed')}.pdf") {
+  grDevices::pdf(file = NULL)
   ggplot2::ggsave(glue::glue(path),
     list,
     device = "pdf",
