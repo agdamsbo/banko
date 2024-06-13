@@ -16,13 +16,21 @@ for(i in seq_along(files)){
 sink()
 }
 
+deploy_shiny <- function (path=here::here("app/"), files=NULL, account.name, name.app,
+          name.token, name.secret){
+  rsconnect::setAccountInfo(name = account.name, token = keyring::key_get(service = name.token),
+                            secret = keyring::key_get(service = name.secret))
+  rsconnect::deployApp(appDir = path,appFiles = files, lint = TRUE, appName = name.app)
+}
+
 merge_scripts(path=here::here("app/functions.R"),files=list.files("R/",pattern = ".R$",full.names = TRUE))
 
 styler::style_file("app/functions.R")
 
 merge_scripts(path=here::here("app/server.R"),files=c("app/functions.R","app/server_raw.R"))
 
-project.aid::deploy_shiny(
+deploy_shiny(
+  files= c("server.R","ui.R"),
   account.name = "agdamsbo",
   name.app = "banko",
   name.token = "rsconnect_agdamsbo_token",
