@@ -1,7 +1,5 @@
 
-source(here::here("R/export.R"))
-source(here::here("R/cards.R"))
-source(here::here("R/play.R"))
+source("functions.R")
 
 server <- function(input, output, session) {
 
