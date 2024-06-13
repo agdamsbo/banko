@@ -29,8 +29,8 @@ project.aid::deploy_shiny(
   name.secret = "rsconnect_agdamsbo_secret"
 )
 
-shinylive::export(appdir = "app", destdir = "docs")
+# shinylive::export(appdir = "app", destdir = "docs")
 #
-httpuv::runStaticServer(dir = "docs")
+# httpuv::runStaticServer(dir = "docs")
 
 

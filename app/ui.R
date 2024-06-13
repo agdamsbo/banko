@@ -1,6 +1,6 @@
 ui <- shiny::fluidPage(
   shiny::titlePanel("Lav bankoplader og spil travebanko",
-                    windowTitle = "banko"
+                    windowTitle = "Spil banko og travebanko"
   ),
   shiny::sidebarLayout(
     shiny::sidebarPanel(
