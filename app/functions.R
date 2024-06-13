@@ -489,16 +489,17 @@ split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
 
 
 
-
 export_pdf <- function(list,
-                       path = "banko_{attr(list, which = 'banko_seed')}.pdf",
-                       paper = "a4") {
+                       path = "banko_{attr(list, which = 'banko_seed')}.pdf") {
   ggplot2::ggsave(glue::glue(path),
     list,
     device = "pdf",
     title = "agdamsbo/banko",
-    paper = paper,
-    create.dir = TRUE
+    paper = "a4",
+    create.dir = TRUE,
+    width = 210,
+    height = 297,
+    units = "mm"
   )
 }
 
