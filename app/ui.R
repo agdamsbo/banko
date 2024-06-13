@@ -1,6 +1,6 @@
 ui <- shiny::fluidPage(
   shiny::titlePanel("Lav bankoplader og spil travebanko",
-                    windowTitle = "banko"
+                    windowTitle = "Spil banko og travebanko"
   ),
   shiny::sidebarLayout(
     shiny::sidebarPanel(
@@ -44,7 +44,7 @@ ui <- shiny::fluidPage(
         shiny::textInput(
           inputId = "footer",
           label = "Fodnote på poster",
-          value = "Opsat {Sys.Date()}, nedtages samme dag.")
+          value = "Opsat {format(Sys.Date(),'%d-%m-%Y')}, nedtages samme dag.")
       ),
       shiny::conditionalPanel(
         condition = "output.rendered=='yes'",

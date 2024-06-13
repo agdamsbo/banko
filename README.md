@@ -22,6 +22,10 @@ Ideas are welcome, but please mind the code of conduct (see below).
 
 - Host shiny app
 
+- Streamline documentation and code
+
+- Add some guards and rails for common functions. It is a little rough at the moment.
+
 - Different game implementations (~~travebanko~~ DONE, others)
 
 Banko is the Danish version of bingo, which is [nicely implemented in R
