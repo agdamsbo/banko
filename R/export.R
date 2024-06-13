@@ -165,8 +165,8 @@ seq_iter <- function(i, n) {
 #' # cards_grob() |>
 #' # export_pdf(path = "banko.pdf")
 cards_grob <- function(data,
-                        n = 5,
-                        note = "agdamsbo/banko") {
+                       n = 5,
+                       note = "agdamsbo/banko") {
   assertthat::assert_that(
     "gg_card" %in% (purrr::map(data, class) |> purrr::list_c())
   )
@@ -194,6 +194,7 @@ cards_grob <- function(data,
 #' @export
 #'
 #' @examples
+#' # data <- cards(30, 5)
 #' # l <- cards(30, 5) |> travebanko(stops = 8)
 #' # l |> export_pdf()
 travebanko <- function(data,
@@ -201,7 +202,6 @@ travebanko <- function(data,
                        post.footer = "Please make a note when they were put up and taken down, if in public.") {
   cards_list <- data |>
     sequence4one()
-
 
   front <- cards_list |>
     (\(.x){
@@ -225,16 +225,14 @@ travebanko <- function(data,
 
   structure(
     list(
-      front |> grid::textGrob(),
+      front |> grid::textGrob() |> list(),
       signs_grob,
       data |> purrr::map(gg_card) |> cards_grob()
-    ),
+    ) |> unlist(recursive = FALSE),
     class = c("arrangelist", class(data)),
     banko_seed = attr(data, which = "banko_seed")
   )
 }
-
-
 
 #' Travebanko stats
 #'
@@ -246,10 +244,11 @@ travebanko <- function(data,
 #' @export
 #'
 #' @examples
-#' cards(10) |> sequence4one() |>
-#'  (\(.x){
-#'    stats_walk(.x[[1]], .x[[2]], stops = 2)
-#'  })()
+#' cards(10) |>
+#'   sequence4one() |>
+#'   (\(.x){
+#'     stats_walk(.x[[1]], .x[[2]], stops = 2)
+#'   })()
 stats_walk <- function(cards, sequence, stops) {
   seed <- cards |> attr(which = "banko_seed")
 
@@ -280,10 +279,11 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 #' @export
 #'
 #' @examples
-#' cards(10) |> sequence4one() |>
-#'  (\(.x){
-#'    stops_walk(.x[[2]], stops = 2)
-#'  })()
+#' cards(10) |>
+#'   sequence4one() |>
+#'   (\(.x){
+#'     stops_walk(.x[[2]], stops = 2)
+#'   })()
 stops_walk <- function(sequence, stops) {
   split_seq(sequence, n = stops) |>
     purrr::imap(\(.x, .i){
@@ -331,12 +331,12 @@ split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
 #' @export
 export_pdf <- function(list,
                        path = "banko_{attr(list, which = 'banko_seed')}.pdf") {
-
+  grDevices::pdf(file = NULL)
   ggplot2::ggsave(glue::glue(path),
     list,
     device = "pdf",
     title = "agdamsbo/banko",
-    paper="a4",
+    paper = "a4",
     create.dir = TRUE,
     width = 210,
     height = 297,
