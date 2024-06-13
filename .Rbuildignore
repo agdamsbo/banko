@@ -12,3 +12,4 @@
 ^\.github$
 \.pdf$
 ^app$
+^publish_shiny\.R$

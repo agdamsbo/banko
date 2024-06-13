@@ -4,18 +4,12 @@
 \alias{export_pdf}
 \title{Print list of grobs as PDF}
 \usage{
-export_pdf(
-  list,
-  path = "banko_{attr(list, which = 'banko_seed')}.pdf",
-  paper = "a4"
-)
+export_pdf(list, path = "banko_{attr(list, which = 'banko_seed')}.pdf")
 }
 \arguments{
 \item{list}{list of grobs to print}
 
 \item{path}{output path. glue string}
-
-\item{paper}{paper format. Passed to "pdf" engine.}
 }
 \description{
 Print list of grobs as PDF
