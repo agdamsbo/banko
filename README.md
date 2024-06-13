@@ -20,12 +20,15 @@ Ideas are welcome, but please mind the code of conduct (see below).
 
 - ~~Build Shiny app~~ DONE
 
-- Host shiny app
+- ~~Host shiny app~~ DONE
 
 - Different game implementations (~~travebanko~~ DONE, others)
 
-Banko is the Danish version of bingo, which is [nicely implemented in R
+Banko is a Danish, special version of bingo, which is [nicely implemented in R
 here](https://github.com/jennybc/bingo).
+
+Go and create your own banko cards or play travebanko with your friends in
+[this hosted version of the package](https://agdamsbo.shinyapps.io/banko/).
 
 ## Installation
 
