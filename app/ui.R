@@ -7,7 +7,7 @@ ui <- shiny::fluidPage(
       shiny::actionButton(
         inputId = "render",
         label = "Generer plader",
-        icon = shiny::icon("qrcode"), width = "100%"
+        icon = shiny::icon("table-cells"), width = "100%"
       ),
       shiny::tags$hr(),
       shiny::numericInput(
@@ -51,7 +51,7 @@ ui <- shiny::fluidPage(
         shiny::downloadButton(
           outputId = "pdf",
           label = "PDF",
-          icon = shiny::icon("vector-square")
+          icon = shiny::icon("circle-down")
         )
       )
     ),
