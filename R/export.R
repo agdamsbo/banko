@@ -326,18 +326,20 @@ split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
 #'
 #' @param list list of grobs to print
 #' @param path output path. glue string
-#' @param paper paper format. Passed to "pdf" engine.
 #'
 #' @return NULL
 #' @export
 export_pdf <- function(list,
-                       path = "banko_{attr(list, which = 'banko_seed')}.pdf",
-                       paper="a4") {
+                       path = "banko_{attr(list, which = 'banko_seed')}.pdf") {
 
   ggplot2::ggsave(glue::glue(path),
     list,
     device = "pdf",
     title = "agdamsbo/banko",
-    paper=paper
+    paper="a4",
+    create.dir = TRUE,
+    width = 210,
+    height = 297,
+    units = "mm"
   )
 }
