@@ -44,7 +44,7 @@ ui <- shiny::fluidPage(
         shiny::textInput(
           inputId = "footer",
           label = "Fodnote på poster",
-          value = "Opsat {format(Sys.Date(),'%d-%m-%Y')}, nedtages samme dag.")
+          value = "Opsat {format(Sys.Date(),'%d-%m-%Y')}, nedtages samme dag. Post {sign.index} af {stops}.")
       ),
       shiny::conditionalPanel(
         condition = "output.rendered=='yes'",
