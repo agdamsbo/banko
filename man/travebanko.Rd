@@ -7,7 +7,9 @@
 travebanko(
   data,
   stops,
-  post.footer = "Please make a note when they were put up and taken down, if in public."
+  post.footer =
+    "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'\%d-\%m-\%Y')}.",
+  post.header = "Post {sign.index}"
 )
 }
 \arguments{
@@ -15,7 +17,12 @@ travebanko(
 
 \item{stops}{stops to make posters for}
 
-\item{post.footer}{note for footer}
+\item{post.footer}{note for footer. Available values for the string are:
+sign.index (current sign/stop), stops (number of stops) and the supplied
+cards list (data).}
+
+\item{post.header}{header glue string for signs/posts. Available values for
+the string are: sign.index (current sign/stop) and stops (number of stops).}
 }
 \value{
 list
@@ -24,6 +31,7 @@ list
 Travebanko grob merge
 }
 \examples{
+# data <- cards(30, 5)
 # l <- cards(30, 5) |> travebanko(stops = 8)
 # l |> export_pdf()
 }

@@ -4,12 +4,14 @@
 \alias{stops_walk}
 \title{Travebanko stops}
 \usage{
-stops_walk(sequence, stops)
+stops_walk(sequence, stops, header = "Post {sign.index}")
 }
 \arguments{
 \item{sequence}{numeric vector of sequence drawn.}
 
 \item{stops}{n stops}
+
+\item{header}{header glue string}
 }
 \value{
 list
@@ -18,8 +20,9 @@ list
 Travebanko stops
 }
 \examples{
-cards(10) |> sequence4one() |>
- (\(.x){
-   stops_walk(.x[[2]], stops = 2)
- })()
+cards(10) |>
+  sequence4one() |>
+  (\(.x){
+    stops_walk(.x[[2]], stops = 2)
+  })()
 }

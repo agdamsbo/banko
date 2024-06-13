@@ -20,8 +20,9 @@ list
 Travebanko stats
 }
 \examples{
-cards(10) |> sequence4one() |>
- (\(.x){
-   stats_walk(.x[[1]], .x[[2]], stops = 2)
- })()
+cards(10) |>
+  sequence4one() |>
+  (\(.x){
+    stats_walk(.x[[1]], .x[[2]], stops = 2)
+  })()
 }
