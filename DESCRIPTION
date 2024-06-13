@@ -21,3 +21,6 @@ Imports:
     gridExtra,
     purrr,
     tibble
+Suggests: 
+    spelling
+Language: en-US

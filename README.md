@@ -6,8 +6,11 @@
 [![R-CMD-check](https://github.com/agdamsbo/banko/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/agdamsbo/banko/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of banko is to ease the creation of banko plates for playing.
-The functionality will be implemented for different fun games.
+Go and create your own banko cards or play travebanko with your friends in
+[this hosted version of the package](https://agdamsbo.shinyapps.io/banko/).
+
+The goal of banko is to ease the creation of banko cards and share ideas for
+for different fun games such as travebanko.
 
 The initial algorithm was inspired from the python package
 [`banko`](https://github.com/skipperkongen/banko/).
@@ -16,7 +19,7 @@ Ideas are welcome, but please mind the code of conduct (see below).
 
 ## To do
 
-- ~~Print plates and export as PDF~~ DONE
+- ~~Print cards and export as PDF~~ DONE
 
 - ~~Build Shiny app~~ DONE
 
@@ -31,9 +34,6 @@ Ideas are welcome, but please mind the code of conduct (see below).
 Banko is a Danish, special version of bingo, which is [nicely implemented in R
 here](https://github.com/jennybc/bingo).
 
-Go and create your own banko cards or play travebanko with your friends in
-[this hosted version of the package](https://agdamsbo.shinyapps.io/banko/).
-
 ## Installation
 
 You can install the development version of banko from
@@ -46,18 +46,31 @@ devtools::install_github("agdamsbo/banko")
 
 ## Example
 
-Create numbers for 5 plates:
+Create numbers for 5 cards:
 
 ``` r
 library(banko)
-plates(5)
+cards(5)
 ```
 
-Export 20 plates with 5 on each page as pdf:
+Export 20 cards with 5 on each page as pdf, with seed specified at 3425:
 
 ``` r
-plates(20) |> purrr::map(gg_plate) |> multiplate_pdf()
+cards(20,seed=3425) |> 
+purrr::map(gg_card) |> 
+cards_grob() |> 
+export_pdf(path = "banko.pdf")
 ```
+
+To get all necessary materials for a game of travebanko, for 30 
+participants/groups with 8 stops, run this:
+
+``` r
+cards(30, 5) |> travebanko(stops = 8) |> export_pdf()
+```
+
+Or even easier, [launch the app directly in your browser](https://agdamsbo.shinyapps.io/banko/).
+
 
 ## Code of Conduct
 
