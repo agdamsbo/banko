@@ -335,6 +335,7 @@ export_pdf <- function(list,
     list,
     device = "pdf",
     title = "agdamsbo/banko",
-    paper=paper
+    paper=paper,
+    create.dir = TRUE
   )
 }
