@@ -13,7 +13,7 @@ full_col <- function(col) {
 }
 
 
-#' Eliminate elements in columns to apply to plates criteria
+#' Eliminate elements in columns to apply to cards criteria
 #'
 #' @param cols tibble of complete columns
 #'
@@ -30,7 +30,7 @@ eliminate <- function(cols) {
   cols
 }
 
-#' Generate one plate
+#' Generate one card
 #'
 #' @return tibble
 #' @export
@@ -46,18 +46,18 @@ generate <- function() {
 }
 
 
-#' Creates n random plates. No checking of uniqueness
+#' Creates n unique cards
 #'
-#' @param n number of plates
+#' @param n number of cards
 #' @param seed integer seed. Default is NULL. The used seed is saved as attribute.
 #'
 #' @return list
 #' @export
 #'
 #' @examples
-#' plates(5) |> purrr::map(\(.x) attr(.x,which = "banko_seed")) |> unique()
-#' attr(plates(5),which = "banko_seed" )
-plates <- function(n,seed=NULL) {
+#' cards(5) |> purrr::map(\(.x) attr(.x,which = "banko_seed")) |> unique()
+#' attr(cards(5),which = "banko_seed" )
+cards <- function(n,seed=NULL) {
   if (is.null(seed)) seed <- abs(sample(.Random.seed,1))
 
   set.seed(seed)
@@ -66,11 +66,11 @@ plates <- function(n,seed=NULL) {
 
   # Repeats until n unique in list
   repeat{
-    # Generates new plate
+    # Generates new card
     p <- structure(generate(),banko_seed=seed)
 
     # Tests if unique compared to rest in list before appending
-    if (is_unique_plate(p, l)) {
+    if (is_unique_card(p, l)) {
       l[[length(l) + 1]] <- p
     }
 
@@ -79,23 +79,23 @@ plates <- function(n,seed=NULL) {
       break
     }
   }
-  # outputs unique plates
+  # outputs unique cards
   structure(l,banko_seed=seed,
             class=c("banko_list",class(l)))
 }
 
 
-#' Test if plate is unique compared to list of plates
+#' Test if card is unique compared to list of cards
 #'
-#' @param p new plate
-#' @param l list of plates
+#' @param p new card
+#' @param l list of cards
 #'
 #' @return logical
 #' @export
 #'
 #' @examples
-#' is_unique_plate(c(1, 2, NA), list(c(2, 4, 6), c(1, NA, 2)))
-is_unique_plate <- function(p, l) {
+#' is_unique_card(c(1, 2, NA), list(c(2, 4, 6), c(1, NA, 2)))
+is_unique_card <- function(p, l) {
   ## Tests only full sequence
   l |>
     purrr::map(get_sequence) |>
@@ -132,17 +132,17 @@ get_sequence <- function(data, no_nas = TRUE) {
 }
 
 
-#' Extract unique numbers from plates and mix
+#' Extract unique numbers from cards and mix
 #'
-#' @param plates banko plates
+#' @param cards banko cards
 #'
 #' @return vector
 #' @export
 #'
 #' @examples
-#' plates(20) |> unique_numbers()
-unique_numbers <- function(plates) {
-  ns <- plates |>
+#' cards(20) |> unique_numbers()
+unique_numbers <- function(cards) {
+  ns <- cards |>
     purrr::map(\(.x) get_sequence(.x, no_nas = TRUE)) |>
     purrr::list_c() |>
     unique()

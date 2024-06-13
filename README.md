@@ -18,7 +18,9 @@ Ideas are welcome, but please mind the code of conduct (see below).
 
 - ~~Print plates and export as PDF~~ DONE
 
-- Host as Shiny app
+- ~~Build Shiny app~~ DONE
+
+- Host shiny app
 
 - Different game implementations (~~travebanko~~ DONE, others)
 
