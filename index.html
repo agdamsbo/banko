@@ -62,14 +62,15 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of banko is to ease the creation of banko plates for playing. The functionality will be implemented for different fun games.</p>
+<p>Go and create your own banko cards or play travebanko with your friends in <a href="https://agdamsbo.shinyapps.io/banko/" class="external-link">this hosted version of the package</a>.</p>
+<p>The goal of banko is to ease the creation of banko cards and share ideas for for different fun games such as travebanko.</p>
 <p>The initial algorithm was inspired from the python package <a href="https://github.com/skipperkongen/banko/" class="external-link"><code>banko</code></a>.</p>
 <p>Ideas are welcome, but please mind the code of conduct (see below).</p>
 <div class="section level2">
 <h2 id="to-do">To do<a class="anchor" aria-label="anchor" href="#to-do"></a>
 </h2>
 <ul>
-<li><p><del>Print plates and export as PDF</del> DONE</p></li>
+<li><p><del>Print cards and export as PDF</del> DONE</p></li>
 <li><p><del>Build Shiny app</del> DONE</p></li>
 <li><p><del>Host shiny app</del> DONE</p></li>
 <li><p>Streamline documentation and code</p></li>
@@ -77,7 +78,6 @@
 <li><p>Different game implementations (<del>travebanko</del> DONE, others)</p></li>
 </ul>
 <p>Banko is a Danish, special version of bingo, which is <a href="https://github.com/jennybc/bingo" class="external-link">nicely implemented in R here</a>.</p>
-<p>Go and create your own banko cards or play travebanko with your friends in <a href="https://agdamsbo.shinyapps.io/banko/" class="external-link">this hosted version of the package</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -90,13 +90,20 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>Create numbers for 5 plates:</p>
+<p>Create numbers for 5 cards:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/agdamsbo/banko" class="external-link">banko</a></span><span class="op">)</span></span>
-<span><span class="fu">plates</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p>Export 20 plates with 5 on each page as pdf:</p>
+<span><span class="fu"><a href="reference/cards.html">cards</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<p>Export 20 cards with 5 on each page as pdf, with seed specified at 3425:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plates</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">gg_plate</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">multiplate_pdf</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/cards.html">cards</a></span><span class="op">(</span><span class="fl">20</span>,seed<span class="op">=</span><span class="fl">3425</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">gg_card</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="fu"><a href="reference/cards_grob.html">cards_grob</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="fu"><a href="reference/export_pdf.html">export_pdf</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"banko.pdf"</span><span class="op">)</span></span></code></pre></div>
+<p>To get all necessary materials for a game of travebanko, for 30 participants/groups with 8 stops, run this:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/cards.html">cards</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">5</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/travebanko.html">travebanko</a></span><span class="op">(</span>stops <span class="op">=</span> <span class="fl">8</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/export_pdf.html">export_pdf</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Or even easier, <a href="https://agdamsbo.shinyapps.io/banko/" class="external-link">launch the app directly in your browser</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
