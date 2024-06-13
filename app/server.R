@@ -366,9 +366,11 @@ cards_grob <- function(data,
 
 
 
+
+
 travebanko <- function(data,
                        stops,
-                       post.footer = "Please make a note when they were put up and taken down, if in public.") {
+                       post.footer = "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'%d-%m-%Y')}.") {
   cards_list <- data |>
     sequence4one()
 
@@ -380,10 +382,20 @@ travebanko <- function(data,
   signs <- cards_list[[2]] |> stops_walk(stops = stops)
 
   signs_grob <- signs |>
-    purrr::map(\(.x){
-      l <- purrr::map2(.x, c(60, 50), \(.y, .i){
-        grid::textGrob(.y, gp = grid::gpar(fontsize = .i))
-      })
+    purrr::imap(\(.x, sign.index){
+      l <- purrr::map2(
+        .x,
+        list(c(70, "bold"), c(50, "plain")) |>
+          purrr::map(setNames, c("size", "weight")),
+        \(.y, .i){
+          grid::textGrob(.y,
+            gp = grid::gpar(
+              fontsize = .i[["size"]],
+              fontface = .i[["weight"]]
+            )
+          )
+        }
+      )
       gridExtra::arrangeGrob(
         grobs = l,
         ncol = 1,
