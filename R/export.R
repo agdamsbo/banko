@@ -2,6 +2,7 @@ utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
 #' Base R style plotting
 #'
 #' @param x "banko" class object
+#' @param ... not used. Conforms to standard docs for plot extensions
 #'
 #' @return plot
 #' @export
@@ -55,8 +56,7 @@ plot.banko <- function(x, ...) {
 #' data <- cards(5)[[1]]
 #' data |> gg_card()
 #' cards(5) |>
-#'   purrr::map(gg_card) |>
-#'   patchwork::wrap_plots(ncol = 1)
+#'   purrr::map(gg_card)
 gg_card <- function(data, text.size = 14, title = NULL, note = NULL, id.hash = FALSE) {
   assertthat::assert_that("banko" %in% class(data))
 
@@ -194,8 +194,8 @@ cards_grob <- function(data,
 #' @export
 #'
 #' @examples
-#' l <- cards(30, 5) |> travebanko(stops = 8)
-#' l |> export_pdf()
+#' # l <- cards(30, 5) |> travebanko(stops = 8)
+#' # l |> export_pdf()
 travebanko <- function(data,
                        stops,
                        post.footer = "Please make a note when they were put up and taken down, if in public.") {
@@ -280,7 +280,10 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 #' @export
 #'
 #' @examples
-#' data <- cards_list
+#' cards(10) |> sequence4one() |>
+#'  (\(.x){
+#'    stops_walk(.x[[2]], stops = 2)
+#'  })()
 stops_walk <- function(sequence, stops) {
   split_seq(sequence, n = stops) |>
     purrr::imap(\(.x, .i){

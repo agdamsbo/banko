@@ -27,6 +27,5 @@ Print banko cards with ggplot2
 data <- cards(5)[[1]]
 data |> gg_card()
 cards(5) |>
-  purrr::map(gg_card) |>
-  patchwork::wrap_plots(ncol = 1)
+  purrr::map(gg_card)
 }

@@ -18,5 +18,8 @@ list
 Travebanko stops
 }
 \examples{
-data <- cards_list
+cards(10) |> sequence4one() |>
+ (\(.x){
+   stops_walk(.x[[2]], stops = 2)
+ })()
 }

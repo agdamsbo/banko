@@ -24,6 +24,6 @@ list
 Travebanko grob merge
 }
 \examples{
-l <- cards(30, 5) |> travebanko(stops = 8)
-l |> export_pdf()
+# l <- cards(30, 5) |> travebanko(stops = 8)
+# l |> export_pdf()
 }

@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{"banko" class object}
+
+\item{...}{not used. Conforms to standard docs for plot extensions}
 }
 \value{
 plot
