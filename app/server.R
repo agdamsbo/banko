@@ -368,9 +368,12 @@ cards_grob <- function(data,
 
 
 
+
+
 travebanko <- function(data,
                        stops,
-                       post.footer = "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'%d-%m-%Y')}.") {
+                       post.footer = "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'%d-%m-%Y')}.",
+                       post.header = "Post {sign.index}") {
   cards_list <- data |>
     sequence4one()
 
@@ -379,14 +382,14 @@ travebanko <- function(data,
       stats_walk(.x[[1]], .x[[2]], stops = stops)
     })()
 
-  signs <- cards_list[[2]] |> stops_walk(stops = stops)
+  signs <- cards_list[[2]] |> stops_walk(stops = stops, header = post.header)
 
   signs_grob <- signs |>
     purrr::imap(\(.x, sign.index){
       l <- purrr::map2(
         .x,
         list(c(70, "bold"), c(50, "plain")) |>
-          purrr::map(setNames, c("size", "weight")),
+          purrr::map(\(.y)stats::setNames(.y, c("size", "weight"))),
         \(.y, .i){
           grid::textGrob(.y,
             gp = grid::gpar(
@@ -465,11 +468,12 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 
 
 
-stops_walk <- function(sequence, stops) {
+
+stops_walk <- function(sequence, stops, header = "Post {sign.index}") {
   split_seq(sequence, n = stops) |>
-    purrr::imap(\(.x, .i){
+    purrr::imap(\(.x, sign.index){
       list(
-        header = glue::glue("Post nr {.i}\n\n"),
+        header = glue::glue(header, "\n\n"),
         numbers = split_seq(.x, l = 5) |> purrr::map(\(.y)paste(.y, collapse = "   ")) |>
           glue::glue_collapse(sep = "\n")
       )
