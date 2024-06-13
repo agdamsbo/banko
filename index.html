@@ -70,7 +70,8 @@
 </h2>
 <ul>
 <li><p><del>Print plates and export as PDF</del> DONE</p></li>
-<li><p>Host as Shiny app</p></li>
+<li><p><del>Build Shiny app</del> DONE</p></li>
+<li><p>Host shiny app</p></li>
 <li><p>Different game implementations (<del>travebanko</del> DONE, others)</p></li>
 </ul>
 <p>Banko is the Danish version of bingo, which is <a href="https://github.com/jennybc/bingo" class="external-link">nicely implemented in R here</a>.</p>
@@ -89,10 +90,10 @@
 <p>Create numbers for 5 plates:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/agdamsbo/banko" class="external-link">banko</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plates.html">plates</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">plates</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>Export 20 plates with 5 on each page as pdf:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plates.html">plates</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">gg_plate</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">multiplate_pdf</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">plates</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">gg_plate</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">multiplate_pdf</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
