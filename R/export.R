@@ -188,18 +188,20 @@ cards_grob <- function(data,
 #'
 #' @param data banko cards
 #' @param stops stops to make posters for
-#' @param post.footer note for footer
+#' @param post.footer note for footer. Available values for the string are:
+#' sign.index (current sign/stop), stops (number of stops) and the supplied
+#' cards list (data).
 #'
 #' @return list
 #' @export
 #'
 #' @examples
 #' # data <- cards(30, 5)
-#' # l <- cards(30, 5) |> travebanko(stops = 8)
+#' # l <- cards(30, 5) |> travebanko(stops = 8,post.footer="Post {sign.index} of {stops}")
 #' # l |> export_pdf()
 travebanko <- function(data,
                        stops,
-                       post.footer = "Please make a note when they were put up and taken down, if in public.") {
+                       post.footer = "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'%d-%m-%Y')}.") {
   cards_list <- data |>
     sequence4one()
 
@@ -211,10 +213,20 @@ travebanko <- function(data,
   signs <- cards_list[[2]] |> stops_walk(stops = stops)
 
   signs_grob <- signs |>
-    purrr::map(\(.x){
-      l <- purrr::map2(.x, c(60, 50), \(.y, .i){
-        grid::textGrob(.y, gp = grid::gpar(fontsize = .i))
-      })
+    purrr::imap(\(.x,sign.index){
+      l <- purrr::map2(
+        .x,
+        list(c(70, "bold"), c(50, "plain")) |>
+          purrr::map(setNames, c("size", "weight")),
+        \(.y, .i){
+          grid::textGrob(.y,
+            gp = grid::gpar(
+              fontsize = .i[["size"]],
+              fontface = .i[["weight"]]
+            )
+          )
+        }
+      )
       gridExtra::arrangeGrob(
         grobs = l,
         ncol = 1,
