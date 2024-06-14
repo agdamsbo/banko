@@ -25,7 +25,7 @@ server <- function(input, output, session) {
       export_pdf(path = "www/banko.pdf")
 
     output$pdfview <- shiny::renderUI({
-      shiny::tags$iframe(style="height:600px; width:100%", src="banko.pdf")
+      shiny::tags$iframe(style="height:100%; width:100%", src="banko.pdf")
     })
   })
 

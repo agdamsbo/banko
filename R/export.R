@@ -304,7 +304,7 @@ stops_walk <- function(sequence, stops, header="Post {sign.index}") {
   split_seq(sequence, n = stops) |>
     purrr::imap(\(.x, sign.index){
       list(
-        header = glue::glue(header,"\n\n"),
+        header = glue::glue(header),
         numbers = split_seq(.x, l = 5) |> purrr::map(\(.y)paste(.y, collapse = "   ")) |>
           glue::glue_collapse(sep = "\n")
       )

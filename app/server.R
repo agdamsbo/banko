@@ -1,11 +1,7 @@
 
 
 ########
-#### Current file: app/functions.R 
-########
-
-########
-#### Current file: R//cards.R
+#### Current file: R//cards.R 
 ########
 
 
@@ -67,8 +63,8 @@ generate <- function() {
 
 
 
-cards <- function(n, seed = NULL) {
-  if (is.null(seed)) seed <- abs(sample(.Random.seed, 1))
+cards <- function(n,seed=NULL) {
+  if (is.null(seed)) seed <- abs(sample(.Random.seed,1))
 
   set.seed(seed)
 
@@ -77,7 +73,7 @@ cards <- function(n, seed = NULL) {
   # Repeats until n unique in list
   repeat{
     # Generates new card
-    p <- structure(generate(), banko_seed = seed)
+    p <- structure(generate(),banko_seed=seed)
 
     # Tests if unique compared to rest in list before appending
     if (is_unique_card(p, l)) {
@@ -90,10 +86,8 @@ cards <- function(n, seed = NULL) {
     }
   }
   # outputs unique cards
-  structure(l,
-    banko_seed = seed,
-    class = c("banko_list", class(l))
-  )
+  structure(l,banko_seed=seed,
+            class=c("banko_list",class(l)))
 }
 
 
@@ -164,7 +158,7 @@ unique_numbers <- function(cards) {
 
 
 ########
-#### Current file: R//export.R
+#### Current file: R//export.R 
 ########
 
 utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
@@ -382,14 +376,14 @@ travebanko <- function(data,
       stats_walk(.x[[1]], .x[[2]], stops = stops)
     })()
 
-  signs <- cards_list[[2]] |> stops_walk(stops = stops, header = post.header)
+  signs <- cards_list[[2]] |> stops_walk(stops = stops,header = post.header)
 
   signs_grob <- signs |>
-    purrr::imap(\(.x, sign.index){
+    purrr::imap(\(.x,sign.index){
       l <- purrr::map2(
         .x,
         list(c(70, "bold"), c(50, "plain")) |>
-          purrr::map(\(.y)stats::setNames(.y, c("size", "weight"))),
+          purrr::map(\(.y)stats::setNames(.y,c("size", "weight"))),
         \(.y, .i){
           grid::textGrob(.y,
             gp = grid::gpar(
@@ -469,11 +463,11 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 
 
 
-stops_walk <- function(sequence, stops, header = "Post {sign.index}") {
+stops_walk <- function(sequence, stops, header="Post {sign.index}") {
   split_seq(sequence, n = stops) |>
     purrr::imap(\(.x, sign.index){
       list(
-        header = glue::glue(header, "\n\n"),
+        header = glue::glue(header),
         numbers = split_seq(.x, l = 5) |> purrr::map(\(.y)paste(.y, collapse = "   ")) |>
           glue::glue_collapse(sep = "\n")
       )
@@ -531,7 +525,7 @@ export_pdf <- function(list,
 
 
 ########
-#### Current file: R//play.R
+#### Current file: R//play.R 
 ########
 
 
@@ -554,7 +548,7 @@ export_pdf <- function(list,
 
 
 
-sequence4one <- function(data, g = 100, selection = "min") {
+sequence4one <- function(data, g = 100, selection="min") {
   # In the case of small number of cards, just use all possible combinations to test
   if ((3^length(data)) < g) {
     g <- 3^length(data)
@@ -598,16 +592,16 @@ sequence4one <- function(data, g = 100, selection = "min") {
   seq.lengths <- seq.test |>
     lengths()
 
-  if (selection == "min") {
+  if (selection=="min"){
     index <- seq.lengths |>
       which.min()
-  } else if (selection == "random") {
+  } else if (selection=="random"){
     index <- 1
   } else {
     stop("Selection strategy has to be either 'min' or 'random'.")
   }
 
-  list(cards = data, sequence = seq.test[[index]])
+  list(cards=data,sequence=seq.test[[index]])
 }
 
 
@@ -625,20 +619,19 @@ sequence4one <- function(data, g = 100, selection = "min") {
 
 
 
-n_complete_rows <- function(cards, sequence = NULL) {
+n_complete_rows <- function(cards, sequence=NULL) {
   if (is.null(sequence)) {
     sequence <- sequence4one(cards) |>
       purrr::pluck("sequence")
-  }
-  cards |>
-    purrr::map(\(.x){
-      apply(.x, 1, get_sequence) |>
-        apply(2, \(.y) {
-          .y %in% sequence |>
-            all()
-        }) |>
-        sum()
-    }) |>
+    }
+  cards |> purrr::map(\(.x){
+    apply(.x, 1, get_sequence) |>
+      apply(2, \(.y) {
+        .y %in% sequence |>
+          all()
+      }) |>
+      sum()
+  }) |>
     purrr::list_c()
 }
 
@@ -653,19 +646,18 @@ n_complete_rows <- function(cards, sequence = NULL) {
 
 
 
-n_each_card <- function(cards, sequence = NULL) {
+n_each_card <- function(cards, sequence=NULL) {
   if (is.null(sequence)) {
     sequence <- sequence4one(cards) |>
       purrr::pluck("sequence")
   }
-  cards |>
-    purrr::map(\(.x){
-      get_sequence(.x) |>
-        (\(.y) {
-          .y %in% sequence
-        })() |>
-        sum()
-    }) |>
+  cards |> purrr::map(\(.x){
+    get_sequence(.x) |>
+      (\(.y) {
+        .y %in% sequence
+      })() |>
+      sum()
+  }) |>
     purrr::list_c()
 }
 
@@ -701,7 +693,7 @@ server <- function(input, output, session) {
       export_pdf(path = "www/banko.pdf")
 
     output$pdfview <- shiny::renderUI({
-      shiny::tags$iframe(style="height:600px; width:100%", src="banko.pdf")
+      shiny::tags$iframe(style="height:100%; width:100%", src="banko.pdf")
     })
   })
 
