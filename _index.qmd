@@ -1,0 +1,32 @@
+---
+title: "Banko in a Quarto document!"
+filters:
+  - shinylive
+---
+
+Below, you should be able to generate banko cards.
+
+Errors, I think due to the file export location.
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+library(shiny)
+library(bslib)
+# https://github.com/coatless-quarto/r-shinylive-demo
+# https://github.com/PaulC91/rinthebrowser
+project.aid::merge_scripts(
+  files = c(
+    list.files("R/", pattern = ".R$", full.names = TRUE),
+    "app/server_raw.R"
+  ),
+  dest = here::here("app/server.R")
+)
+
+source(here::here("app/ui.R"))
+source(here::here("app/server.R"))
+
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
+```
