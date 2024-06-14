@@ -1,5 +1,5 @@
 
-# banko
+# banko R package
 
 <!-- badges: start -->
 
