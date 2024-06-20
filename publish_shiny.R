@@ -26,6 +26,8 @@ project.aid::deploy_shiny(
 # Will implement in vignette.
 
 
+## Merging scripts for minimal live version
+
 project.aid::merge_scripts(
   files = c(
     list.files("R/", pattern = ".R$", full.names = TRUE),

@@ -1,6 +1,9 @@
-devtools::build_readme()
 
 spelling::update_wordlist()
+
+devtools::check()
+
+# pkgdown::build_search()
 
 # publishing
 # devtools::check_win_release()

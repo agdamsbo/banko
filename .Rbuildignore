@@ -13,3 +13,9 @@
 \.pdf$
 ^app$
 ^publish_shiny\.R$
+
+_extensions
+_quarto.yml
+index.qmd
+live
+pages

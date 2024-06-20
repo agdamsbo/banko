@@ -1,11 +1,17 @@
 project:
   type: website
-  output-dir: _site
+  output-dir: docs
 
 website:
   title: "Banko in the browser"
-  search: false
+  search: true
   navbar:
     left:
       - href: index.qmd
         text: "Home"
+      - href: pages/banko_live.qmd
+        text: "Play"
+      - href: LICENSE.md
+        text: License
+      # - href: reference/index.html
+      #   text: "Refeference"
