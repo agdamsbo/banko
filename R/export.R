@@ -1,4 +1,4 @@
-utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
+#' utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
 #' Base R style plotting
 #'
 #' @param x "banko" class object

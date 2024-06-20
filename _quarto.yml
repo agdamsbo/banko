@@ -1,0 +1,11 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Banko in the browser"
+  search: false
+  navbar:
+    left:
+      - href: index.qmd
+        text: "Home"

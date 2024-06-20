@@ -25,6 +25,18 @@ project.aid::deploy_shiny(
 # It also runs as shinylive app, but quite slow. But it runs!
 # Will implement in vignette.
 
-# shinylive::export(appdir = "app", destdir = "docs")
+
+project.aid::merge_scripts(
+  files = c(
+    list.files("R/", pattern = ".R$", full.names = TRUE),
+    "live/server_raw.R"
+  ),
+  dest = here::here("live/server.R")
+)
+
+
+shiny::runApp(appDir = "live",launch.browser = TRUE)
+
+shinylive::export(appdir = "live", destdir = "docs")
 #
-# httpuv::runStaticServer(dir = "docs")
+httpuv::runStaticServer(dir = "docs")

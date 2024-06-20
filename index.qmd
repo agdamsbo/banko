@@ -1,0 +1,20 @@
+---
+title: "Banko in a Quarto document!"
+filters:
+  - shinylive
+---
+
+Below, you should be able to generate banko cards.
+
+Errors, I think due to the file export location.
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 800
+
+source("live/ui.R")
+source("live/server.R")
+
+# Create Shiny app ----
+shiny::shinyApp(ui = ui, server = server)
+```

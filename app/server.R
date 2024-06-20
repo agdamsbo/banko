@@ -161,7 +161,7 @@ unique_numbers <- function(cards) {
 #### Current file: R//export.R 
 ########
 
-utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
+
 
 
 
@@ -667,7 +667,6 @@ n_each_card <- function(cards, sequence=NULL) {
 ########
 
 
-
 server <- function(input, output, session) {
 
   v <- shiny::reactiveValues(
@@ -715,7 +714,7 @@ server <- function(input, output, session) {
   # downloadHandler contains 2 arguments as functions, namely filename, content
   output$pdf <- shiny::downloadHandler(
     filename = function() {
-      glue::glue("banko.pdf")
+      "banko.pdf"
     },
     # content is a function with argument file. content writes the plot to the device
     content = function(file) {
@@ -727,6 +726,7 @@ server <- function(input, output, session) {
   session$onSessionEnded(function() {
     cat("Session Ended\n")
     unlink("www/banko.pdf")
+    unlink("www")
     # unlink("banko.pdf")
   })
 

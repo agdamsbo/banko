@@ -1,5 +1,4 @@
 
-
 server <- function(input, output, session) {
 
   v <- shiny::reactiveValues(
@@ -47,7 +46,7 @@ server <- function(input, output, session) {
   # downloadHandler contains 2 arguments as functions, namely filename, content
   output$pdf <- shiny::downloadHandler(
     filename = function() {
-      glue::glue("banko.pdf")
+      "banko.pdf"
     },
     # content is a function with argument file. content writes the plot to the device
     content = function(file) {
