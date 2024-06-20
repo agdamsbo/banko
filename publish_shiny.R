@@ -12,6 +12,8 @@ project.aid::merge_scripts(
   dest = here::here("app/server.R")
 )
 
+shiny::runApp(appDir = "app",launch.browser = TRUE)
+
 project.aid::deploy_shiny(
   files = c("server.R", "ui.R"),
   account.name = "agdamsbo",

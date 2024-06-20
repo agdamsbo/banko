@@ -1,9 +1,11 @@
-ui <- bslib::page_sidebar(
+ui <- bslib::page_fluid(
+  # bslib::page_sidebar(
   theme = bslib::bs_theme(bootswatch = "minty"),
   title = "Lav bankoplader og spil travebanko",
   window_title = "Spil banko og travebanko",
-  sidebar = bslib::sidebar(
-    open = "always",
+  # sidebar = bslib::sidebar(
+  #   open = "open",
+  bslib::card(
     bslib::input_task_button(
       id = "render",
       label = "Generer plader",
@@ -60,7 +62,7 @@ ui <- bslib::page_sidebar(
       )
     )
   ),
-  bslib::card(
+  bslib::card(height = "400px",full_screen = TRUE,
     bslib::card_header("Plader og evt. poster"),
     shiny::uiOutput("pdfview")
   )

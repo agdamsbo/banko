@@ -691,6 +691,7 @@ server <- function(input, output, session) {
     v$pdfout |>
       ## This was the key, to
       export_pdf(path = "www/banko.pdf")
+    # export_pdf(path = "banko.pdf")
 
     output$pdfview <- shiny::renderUI({
       shiny::tags$iframe(style="height:100%; width:100%", src="banko.pdf")
@@ -726,6 +727,7 @@ server <- function(input, output, session) {
   session$onSessionEnded(function() {
     cat("Session Ended\n")
     unlink("www/banko.pdf")
+    # unlink("banko.pdf")
   })
 
 }
