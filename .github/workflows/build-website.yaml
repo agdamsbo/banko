@@ -1,3 +1,5 @@
+## Source: https://github.com/coatless-quarto/r-shinylive-demo/blob/main/.github/workflows/publish-demo.yml
+
 on:
   push:
     branches:
@@ -14,32 +16,54 @@ permissions:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    concurrency:
+      group: quarto-website-${{ github.event_name != 'pull_request' || github.run_id }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # To render using knitr, we need a few more setup steps...
+      # If we didn't want the examples to use `engine: knitr`, we could
+      # skip a few of the setup steps.
+      - name: "Setup pandoc"
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: "Setup R"
+        uses: r-lib/actions/setup-r@v2
+
+      - name: "Setup R dependencies for Quarto's knitr engine"
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages:
+            cran::shinylive
+            any::knitr
+            any::rmarkdown
+            any::downlit
+            any::xml2
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+
+
+      # Render the Quarto file
+      - name: "Render working directory"
+        uses: quarto-dev/quarto-actions/render@v2
+
+      # Upload a tar file that will work with GitHub Pages
+      # Make sure to set a retention day to avoid running into a cap
+      # This artifact shouldn't be required after deployment onto pages was a success.
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          # To install LaTeX to build PDF book
-          tinytex: true
-          # uncomment below and fill to pin a version
-          # version: 0.9.600
+          retention-days: 1
 
-      - name: Install shinylive
-        run: quarto add quarto-ext/shinylive --no-prompt
-
-
-       # The next two steps are used to setup the project when renv is used. Just uncomment and away you go!
-#      - uses: r-lib/actions/setup-r@v2
-
-#      - uses: r-lib/actions/setup-renv@v2
-
-      # From https://github.com/r-lib/actions/tree/v2-branch/setup-r
-      - name: Publish to GitHub Pages (and render)
-        uses: quarto-dev/quarto-actions/publish@v2
-        with:
-          target: gh-pages
-        env:
-          # this secret is always available for github actions
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Use an Action deploy to push the artifact onto GitHub Pages
+      # This requires the `Action` tab being structured to allow for deployment
+      # instead of using `docs/` or the `gh-pages` branch of the repository
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
