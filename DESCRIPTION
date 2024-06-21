@@ -20,7 +20,8 @@ Imports:
     graphics,
     gridExtra,
     purrr,
-    tibble
+    tibble,
+    shinylive
 Suggests: 
     spelling
 Language: en-US
