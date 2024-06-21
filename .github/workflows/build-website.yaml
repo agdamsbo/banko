@@ -27,7 +27,7 @@ jobs:
           # version: 0.9.600
 
       - name: Install shinylive
-        run: quarto add quarto-ext/shinylive
+        run: quarto add quarto-ext/shinylive --no-prompt
 
 
        # The next two steps are used to setup the project when renv is used. Just uncomment and away you go!
