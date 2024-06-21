@@ -1,78 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://agdamsbo.github.io/banko/404.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/CODE_OF_CONDUCT.html</loc>
+    <loc>https://agdamsbo.github.io/banko/pages/banko_live.html</loc>
+    <lastmod>2024-06-20T11:18:39.489Z</lastmod>
   </url>
   <url>
     <loc>https://agdamsbo.github.io/banko/LICENSE.html</loc>
+    <lastmod>2024-06-09T18:47:01.478Z</lastmod>
   </url>
   <url>
-    <loc>https://agdamsbo.github.io/banko/authors.html</loc>
+    <loc>https://agdamsbo.github.io/banko/CODE_OF_CONDUCT.html</loc>
+    <lastmod>2024-06-10T07:18:16.217Z</lastmod>
   </url>
   <url>
     <loc>https://agdamsbo.github.io/banko/index.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/cards.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/cards_grob.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/eliminate.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/export_pdf.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/full_col.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/generate.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/get_sequence.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/gg_card.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/is_unique_card.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/n_complete_rows.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/n_each_card.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/plot.banko.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/seq_iter.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/sequence4one.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/split_seq.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/stats_walk.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/stops_walk.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/travebanko.html</loc>
-  </url>
-  <url>
-    <loc>https://agdamsbo.github.io/banko/reference/unique_numbers.html</loc>
+    <lastmod>2024-06-20T11:36:38.797Z</lastmod>
   </url>
 </urlset>

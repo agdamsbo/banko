@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Banko in the browser - Banko in R demonstration</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content="..">
+<script src="../site_libs/quarto-contrib/shinylive-0.3.0/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="../site_libs/quarto-contrib/shinylive-0.3.0/shinylive/run-python-blocks.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/shinylive-0.3.0/shinylive/shinylive.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Banko in the browser</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../pages/banko_live.html" aria-current="page"> 
+<span class="menu-text">Play</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../LICENSE.html"> 
+<span class="menu-text">License</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Banko in R demonstration</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Below, you should be able to generate banko cards.</p>
+<p>Errors, I think due to the file export location.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| standalone: true
+#| viewerHeight: 550
+
+ui &lt;- bslib::page_fluid(
+  theme = bslib::bs_theme(bootswatch = "minty"),
+  bslib::card(
+    shiny::actionButton(
+      inputId = "render",
+      label = "Generer plader",
+      icon = shiny::icon("circle-down")
+    ),
+    shiny::h6("Det tager lige lidt tid at danne pladerne. Vær tålmodig."),
+    shiny::tags$hr(),
+    shiny::numericInput(
+      inputId = "n.cards",
+      label = "Hvor mange plader skal du bruge?",
+      value = 30,
+      min = 1,
+      max = 100
+    ),
+    shiny::numericInput(
+      inputId = "seed",
+      label = "Angiv udgave (seed)",
+      value = abs(sample(.Random.seed, 1))
+    ),
+    shiny::radioButtons(
+      inputId = "travebanko",
+      label = "Spil travebanko?",
+      selected = "no",
+      choices = list(
+        "Ja" = "yes",
+        "Nej" = "no"
+      )
+    ),
+    shiny::tags$hr(),
+    shiny::conditionalPanel(
+      condition = "input.travebanko=='yes'",
+      shiny::numericInput(
+        inputId = "stops",
+        label = "Angiv antal poster",
+        value = 5,
+        min = 2,
+        max = 20
+      ),
+      shiny::textInput(
+        inputId = "footer",
+        label = "Fodnote på poster",
+        value = "Opsat {format(Sys.Date(),'%d-%m-%Y')}, nedtages samme dag. Post {sign.index} af {stops}."
+      )
+    ),
+    shiny::conditionalPanel(
+    condition = "output.rendered=='yes'",
+      shiny::downloadButton(
+        outputId = "pdf",
+        label = "PDF",
+        icon = shiny::icon("circle-down")
+      )
+    )
+  )
+)
+
+
+########
+#### Current file: R//cards.R 
+########
+
+
+
+
+
+
+
+
+full_col &lt;- function(col) {
+  min &lt;- ifelse(col == 0, 1, 0)
+  max &lt;- ifelse(col == 8, 10, 9)
+
+  sort(sample(seq(min, max), size = 3)) + col * 10
+}
+
+
+
+
+
+
+
+
+eliminate &lt;- function(cols) {
+  # first two rows
+  for (i in 1:2) {
+    cols[i, sample(1:9, size = 4)] &lt;- NA
+  }
+  # third row
+  cols[3, sample(which(!apply(is.na(cols[1:2, ]), 2, all)), size = 4)] &lt;- NA
+  # output modified data
+  cols
+}
+
+
+
+
+
+
+
+
+generate &lt;- function() {
+  out &lt;- seq(0, 8) |&gt;
+    purrr::map(full_col) |&gt;
+    dplyr::bind_cols(.name_repair = "unique_quiet") |&gt;
+    eliminate()
+  structure(out, class = c("banko", class(out)))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+cards &lt;- function(n,seed=NULL) {
+  if (is.null(seed)) seed &lt;- abs(sample(.Random.seed,1))
+
+  set.seed(seed)
+
+  l &lt;- list()
+
+  # Repeats until n unique in list
+  repeat{
+    # Generates new card
+    p &lt;- structure(generate(),banko_seed=seed)
+
+    # Tests if unique compared to rest in list before appending
+    if (is_unique_card(p, l)) {
+      l[[length(l) + 1]] &lt;- p
+    }
+
+    # Breaks when l has length n
+    if ((length(l) == n)) {
+      break
+    }
+  }
+  # outputs unique cards
+  structure(l,banko_seed=seed,
+            class=c("banko_list",class(l)))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+is_unique_card &lt;- function(p, l) {
+  ## Tests only full sequence
+  l |&gt;
+    purrr::map(get_sequence) |&gt;
+    purrr::map_lgl(\(.x){
+      identical(get_sequence(p), .x)
+    }) |&gt;
+    (\(.x) !any(.x))()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+get_sequence &lt;- function(data, no_nas = TRUE) {
+  # To test completely unique, compare sequence without omitting
+  out &lt;- data |&gt;
+    as.matrix() |&gt;
+    as.vector()
+
+  if (no_nas) {
+    out[which(!is.na(out))]
+    # Not using na.omit(), as this appends attributes
+  } else {
+    out
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+unique_numbers &lt;- function(cards) {
+  ns &lt;- cards |&gt;
+    purrr::map(\(.x) get_sequence(.x, no_nas = TRUE)) |&gt;
+    purrr::list_c() |&gt;
+    unique()
+
+  sample(ns, size = length(ns), replace = FALSE)
+}
+
+
+########
+#### Current file: R//export.R 
+########
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+plot.banko &lt;- function(x, ...) {
+  old &lt;- graphics::par(pty = "s", mar = c(0, 0, 0, 0))
+  ncol &lt;- dim(x)[2]
+  nrow &lt;- dim(x)[1]
+  on.exit(graphics::par(old))
+
+  graphics::plot(
+    c(0, 9),
+    c(0, -9),
+    type = "n",
+    xlab = "",
+    ylab = "",
+    axes = FALSE
+  )
+  graphics::rect(
+    col(x) - 1,
+    -row(x) + 1,
+    col(x),
+    -row(x),
+    col = NULL,
+    border = NULL
+  )
+  graphics::text(col(x) - 0.5,
+    -row(x) + 0.5,
+    get_sequence(x, no_nas = FALSE),
+    cex = 2,
+    col = "black",
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+gg_card &lt;- function(data, text.size = 14, title = NULL, note = NULL, id.hash = FALSE) {
+  assertthat::assert_that("banko" %in% class(data))
+
+  d &lt;- tibble::tibble(
+    text = get_sequence(data, no_nas = FALSE),
+    x1 = rep(0:8, each = 3),
+    x2 = rep(1:9, each = 3),
+    y1 = rep(2:0, times = 9),
+    y2 = rep(3:1, times = 9)
+  )
+
+  p &lt;- ggplot2::ggplot() +
+    ggplot2::geom_rect(
+      data = d,
+      ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2),
+      color = "black",
+      alpha = 0
+    ) +
+    ggplot2::geom_text(
+      data = d,
+      ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+      size = text.size, na.rm = TRUE
+    ) +
+    ggplot2::theme_void()
+
+  if (!is.null(title)) {
+    t &lt;- tibble::tibble(
+      text = title,
+      x1 = 0,
+      x2 = 9,
+      y1 = 3,
+      y2 = 3.7
+    )
+    p &lt;- p +
+      ggplot2::geom_rect(
+        data = t,
+        ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2),
+        color = "black", alpha = 0
+      ) +
+      ggplot2::geom_text(
+        data = t,
+        ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+        size = text.size
+      )
+  }
+
+  if (id.hash) {
+    note &lt;- paste0(note, ". id: ", digest::digest(d, algo = "md5"))
+  }
+
+
+  if (!is.null(title)) {
+    t &lt;- tibble::tibble(
+      text = note,
+      x1 = 0,
+      x2 = 9,
+      y1 = -.3,
+      y2 = 0
+    )
+    p &lt;- p +
+      ggplot2::geom_rect(
+        data = t,
+        ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2),
+        color = "black", alpha = 0
+      ) +
+      ggplot2::geom_text(
+        data = t,
+        ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+        size = text.size / 2
+      )
+  }
+
+  structure(p,
+    class = c("gg_card", class(p)),
+    banko_seed = attr(data, which = "banko_seed")
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+seq_iter &lt;- function(i, n) {
+  seq((i - 1) * n + 1, i * n)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cards_grob &lt;- function(data,
+                       n = 5,
+                       note = "agdamsbo/banko") {
+  assertthat::assert_that(
+    "gg_card" %in% (purrr::map(data, class) |&gt; purrr::list_c())
+  )
+
+  pl &lt;- list()
+
+  for (i in seq_len(ceiling(length(data) / n))) {
+    pl[[i]] &lt;- gridExtra::arrangeGrob(
+      grobs = data[seq_iter(i, n)],
+      ncol = 1, nrow = n,
+      left = grid::textGrob(glue::glue(note), gp = grid::gpar(fontsize = 10), rot = 90, vjust = 2)
+    )
+  }
+
+  structure(pl, class = c("arrangelist", class(data)))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+travebanko &lt;- function(data,
+                       stops,
+                       post.footer = "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'%d-%m-%Y')}.",
+                       post.header = "Post {sign.index}") {
+  cards_list &lt;- data |&gt;
+    sequence4one()
+
+  front &lt;- cards_list |&gt;
+    (\(.x){
+      stats_walk(.x[[1]], .x[[2]], stops = stops)
+    })()
+
+  signs &lt;- cards_list[[2]] |&gt; stops_walk(stops = stops,header = post.header)
+
+  signs_grob &lt;- signs |&gt;
+    purrr::imap(\(.x,sign.index){
+      l &lt;- purrr::map2(
+        .x,
+        list(c(70, "bold"), c(50, "plain")) |&gt;
+          purrr::map(\(.y)stats::setNames(.y,c("size", "weight"))),
+        \(.y, .i){
+          grid::textGrob(.y,
+            gp = grid::gpar(
+              fontsize = .i[["size"]],
+              fontface = .i[["weight"]]
+            )
+          )
+        }
+      )
+      gridExtra::arrangeGrob(
+        grobs = l,
+        ncol = 1,
+        bottom = grid::textGrob(glue::glue(post.footer), gp = grid::gpar(fontsize = 10), vjust = -4)
+      )
+    }) |&gt;
+    (\(.x) structure(.x, class = c("arrangelist", class(.x))))()
+
+  structure(
+    list(
+      front |&gt; grid::textGrob() |&gt; list(),
+      signs_grob,
+      data |&gt; purrr::map(gg_card) |&gt; cards_grob()
+    ) |&gt; unlist(recursive = FALSE),
+    class = c("arrangelist", class(data)),
+    banko_seed = attr(data, which = "banko_seed")
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+stats_walk &lt;- function(cards, sequence, stops) {
+  seed &lt;- cards |&gt; attr(which = "banko_seed")
+
+  summary_str &lt;- n_complete_rows(cards, sequence) |&gt;
+    factor(levels = 1:3, labels = c("One row", "Two rows", "Full card")) |&gt;
+    summary() |&gt;
+    (\(.x){
+      paste(paste(names(.x), .x, sep = ": "), collapse = ", ")
+    })()
+
+  glue::glue(
+    "God tur med travebanko!\n\n
+Her er {length(cards)} plader og {stops} poster.\n
+Spillet er designet til at alle har mindst en hel raekke.\n
+Gendan med koden her (seed): {seed}\n\n
+Vindere: {summary_str}\n\n
+Tal paa poster: \n {split_seq(sequence,l=15) |&gt; purrr::map(paste,collapse=' ') |&gt; purrr::list_c() |&gt; paste(collapse='\n')}
+"
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+stops_walk &lt;- function(sequence, stops, header="Post {sign.index}") {
+  split_seq(sequence, n = stops) |&gt;
+    purrr::imap(\(.x, sign.index){
+      list(
+        header = glue::glue(header),
+        numbers = split_seq(.x, l = 5) |&gt; purrr::map(\(.y)paste(.y, collapse = "   ")) |&gt;
+          glue::glue_collapse(sep = "\n")
+      )
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+split_seq &lt;- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
+  if (!is.null(l)) n &lt;- ceiling(length(sequence) / l)
+
+  if (is.null(split.labels)) split.labels &lt;- seq_len(n)
+
+  split(
+    sequence,
+    cut(seq_along(sequence),
+      breaks = n,
+      labels = split.labels
+    )
+  )
+}
+
+
+
+
+
+
+
+
+
+export_pdf &lt;- function(list,
+                       path = "banko_{attr(list, which = 'banko_seed')}.pdf") {
+  grDevices::pdf(file = NULL)
+  ggplot2::ggsave(glue::glue(path),
+    list,
+    device = "pdf",
+    title = "agdamsbo/banko",
+    paper = "a4",
+    create.dir = TRUE,
+    width = 210,
+    height = 297,
+    units = "mm"
+  )
+}
+
+
+########
+#### Current file: R//play.R 
+########
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sequence4one &lt;- function(data, g = 100, selection="min") {
+  # In the case of small number of cards, just use all possible combinations to test
+  if ((3^length(data)) &lt; g) {
+    g &lt;- 3^length(data)
+  }
+
+  # All combination would be in expand.grid(), but this is quickly very heavy.
+  # Instead, g random samples of row subsets are drawn to find the shortest
+  # sequence of numbers.
+
+  l &lt;- list()
+  # Repeats until g unique in list
+  repeat{
+    # Generates new rows index vector
+    p &lt;- sample(seq_len(nrow(data[[1]])),
+      size = length(data),
+      replace = TRUE
+    )
+
+    # Tests if unique compared to rest in list before appending
+    if (is_unique_card(p, l)) {
+      l[[length(l) + 1]] &lt;- p
+    }
+
+    # Breaks when l has length g
+    if ((length(l) == g)) {
+      break
+    }
+  }
+
+  seq.test &lt;- l |&gt;
+    purrr::map(\(.x){
+      .x |&gt;
+        purrr::imap(\(.y, .i){
+          data[[.i]][.y, ] |&gt;
+            get_sequence()
+        }) |&gt;
+        purrr::list_c() |&gt;
+        unique()
+    })
+
+  seq.lengths &lt;- seq.test |&gt;
+    lengths()
+
+  if (selection=="min"){
+    index &lt;- seq.lengths |&gt;
+      which.min()
+  } else if (selection=="random"){
+    index &lt;- 1
+  } else {
+    stop("Selection strategy has to be either 'min' or 'random'.")
+  }
+
+  list(cards=data,sequence=seq.test[[index]])
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+n_complete_rows &lt;- function(cards, sequence=NULL) {
+  if (is.null(sequence)) {
+    sequence &lt;- sequence4one(cards) |&gt;
+      purrr::pluck("sequence")
+    }
+  cards |&gt; purrr::map(\(.x){
+    apply(.x, 1, get_sequence) |&gt;
+      apply(2, \(.y) {
+        .y %in% sequence |&gt;
+          all()
+      }) |&gt;
+      sum()
+  }) |&gt;
+    purrr::list_c()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+n_each_card &lt;- function(cards, sequence=NULL) {
+  if (is.null(sequence)) {
+    sequence &lt;- sequence4one(cards) |&gt;
+      purrr::pluck("sequence")
+  }
+  cards |&gt; purrr::map(\(.x){
+    get_sequence(.x) |&gt;
+      (\(.y) {
+        .y %in% sequence
+      })() |&gt;
+      sum()
+  }) |&gt;
+    purrr::list_c()
+}
+
+
+########
+#### Current file: live/server_raw.R 
+########
+
+
+server &lt;- function(input, output, session) {
+
+  v &lt;- shiny::reactiveValues(
+    pdfout = NULL
+  )
+
+  shiny::observeEvent(input$render, {
+    cards_r &lt;- cards(input$n.cards,input$seed)
+
+    if (input$travebanko == "yes"){
+      v$pdfout &lt;- cards_r |&gt;
+        travebanko(
+          stops = input$stops,
+          post.footer = input$footer)
+    } else {
+      v$pdfout &lt;- cards_r |&gt;
+        purrr::map(gg_card) |&gt;
+        cards_grob()
+    }
+
+  })
+
+  output$rendered &lt;- shiny::reactive({
+    if (is.null(v$pdfout)) {
+      "no"
+    } else {
+      "yes"
+    }
+  })
+
+  shiny::outputOptions(output, 'rendered', suspendWhenHidden = FALSE)
+
+  # downloadHandler contains 2 arguments as functions, namely filename, content
+  output$pdf &lt;- shiny::downloadHandler(
+    filename = function() {
+      "banko.pdf"
+    },
+    # content is a function with argument file. content writes the plot to the device
+    content = function(file) {
+      v$pdfout |&gt;
+        export_pdf(path = file)
+    }
+  )
+
+session$onSessionEnded(function() {
+  # cat("Session Ended\n")
+  unlink("www",recursive = TRUE)
+  # unlink("banko.pdf")
+})
+
+}
+
+
+# Create Shiny app ----
+shiny::shinyApp(ui = ui, server = server)</code></pre>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/agdamsbo\.github\.io\/banko\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
