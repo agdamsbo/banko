@@ -26,6 +26,10 @@ jobs:
           # uncomment below and fill to pin a version
           # version: 0.9.600
 
+      - name: Install shinylive
+        run: quarto add quarto-ext/shinylive
+
+
        # The next two steps are used to setup the project when renv is used. Just uncomment and away you go!
 #      - uses: r-lib/actions/setup-r@v2
 
