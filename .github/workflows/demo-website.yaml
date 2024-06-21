@@ -2,20 +2,17 @@
 
 on:
   push:
-    branches:
-      - main
-      - master
-  workflow_dispatch:
+    branches: [main, master]
+  release:
+      types: [published]
+  workflow_dispatch: {}
 
-name: Render and Publish
-
-permissions:
-  contents: write
-  pages: write
+name: demo-website
 
 jobs:
-  build-deploy:
+  demo-website:
     runs-on: ubuntu-latest
+    # Only restrict concurrency for non-PR jobs
     concurrency:
       group: quarto-website-${{ github.event_name != 'pull_request' || github.run_id }}
     permissions:
@@ -23,7 +20,7 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - name: Check out repository
+      - name: "Check out repository"
         uses: actions/checkout@v4
 
       # To render using knitr, we need a few more setup steps...
@@ -39,15 +36,15 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages:
-            cran::shinylive
+            cran::shinylive@0.1.1 ## Pin version to ensure consistency
             any::knitr
             any::rmarkdown
             any::downlit
             any::xml2
 
-      - name: Set up Quarto
+      # Back to our regularly scheduled Quarto output
+      - name: "Set up Quarto"
         uses: quarto-dev/quarto-actions/setup@v2
-
 
       # Render the Quarto file
       - name: "Render working directory"
