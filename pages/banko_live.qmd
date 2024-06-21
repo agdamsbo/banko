@@ -1,5 +1,9 @@
 ---
 title: "Banko in R demonstration"
+format:
+  html:
+    resources: 
+      - shinylive-sw.js
 filters:
   - shinylive
 ---
