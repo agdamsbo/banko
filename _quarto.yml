@@ -6,7 +6,7 @@ execute:
   freeze: true
 
 website:
-  title: "Banko in the browser"
+  title: "Spil banko og travebanko"
   search: true
   navbar:
     left:

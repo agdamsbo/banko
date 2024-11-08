@@ -161,7 +161,7 @@ unique_numbers <- function(cards) {
 #### Current file: R//export.R 
 ########
 
-
+utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
 
 
 
@@ -463,8 +463,18 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 
 
 
+
+
+
+
+
 stops_walk <- function(sequence, stops, header="Post {sign.index}") {
-  split_seq(sequence, n = stops) |>
+  ls <- split_seq(sequence, n = stops)
+
+  ## Adds 99 if the leement has length 0. Edge case for few cards and many stops.
+  ls[lengths(ls)==0] <- 99
+
+  ls |>
     purrr::imap(\(.x, sign.index){
       list(
         header = glue::glue(header),
@@ -491,12 +501,19 @@ split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
 
   if (is.null(split.labels)) split.labels <- seq_len(n)
 
+  # cut() fails on n=1, this avoids that.
+  if (n == 1){
+    splitter.f <- factor(rep(1,length(sequence)))
+  } else {
+    splitter.f <- cut(seq_along(sequence),
+        breaks = n,
+        labels = split.labels
+    )
+  }
+
   split(
     sequence,
-    cut(seq_along(sequence),
-      breaks = n,
-      labels = split.labels
-    )
+    splitter.f
   )
 }
 
@@ -726,7 +743,6 @@ server <- function(input, output, session) {
   session$onSessionEnded(function() {
     cat("Session Ended\n")
     unlink("www/banko.pdf")
-    unlink("www")
     # unlink("banko.pdf")
   })
 
