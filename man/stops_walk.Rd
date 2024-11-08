@@ -25,4 +25,9 @@ cards(10) |>
   (\(.x){
     stops_walk(.x[[2]], stops = 2)
   })()
+cards(2) |>
+  sequence4one() |>
+  (\(.x){
+    stops_walk(.x[[2]], stops = 10)
+  })()
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/export.R
 \name{plot.banko}
 \alias{plot.banko}
-\title{utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
-Base R style plotting}
+\title{Base R style plotting}
 \usage{
 \method{plot}{banko}(x, ...)
 }
@@ -16,7 +15,6 @@ Base R style plotting}
 plot
 }
 \description{
-utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
 Base R style plotting
 }
 \examples{

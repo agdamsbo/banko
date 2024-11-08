@@ -1,16 +1,16 @@
 Package: banko
 Type: Package
 Title: banko game
-Version: 0.1.0
+Version: 24.11.1
 Authors@R: 
     person(given="Andreas Gammelgaard", family="Damsbo", email="andreas@gdamsbo.dk", role = c("aut", "cre"))
-Description: Play Danish banko. Very much inspired from https://github.com/skipperkongen/banko/.
+Description: Play Danish banko and travebanko. Card generation inspired from https://github.com/skipperkongen/banko/.
 License: AGPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/agdamsbo/banko, https://agdamsbo.github.io/banko/
 BugReports: https://github.com/agdamsbo/banko/issues
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports: 
     assertthat,
     digest,
