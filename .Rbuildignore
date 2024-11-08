@@ -19,3 +19,4 @@ _quarto.yml
 index.qmd
 live
 pages
+^dev$

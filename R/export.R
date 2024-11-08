@@ -300,8 +300,18 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 #'   (\(.x){
 #'     stops_walk(.x[[2]], stops = 2)
 #'   })()
+#' cards(2) |>
+#'   sequence4one() |>
+#'   (\(.x){
+#'     stops_walk(.x[[2]], stops = 10)
+#'   })()
 stops_walk <- function(sequence, stops, header="Post {sign.index}") {
-  split_seq(sequence, n = stops) |>
+  ls <- split_seq(sequence, n = stops)
+
+  ## Adds 99 if the leement has length 0. Edge case for few cards and many stops.
+  ls[lengths(ls)==0] <- 99
+
+  ls |>
     purrr::imap(\(.x, sign.index){
       list(
         header = glue::glue(header),
@@ -322,18 +332,25 @@ stops_walk <- function(sequence, stops, header="Post {sign.index}") {
 #' @export
 #'
 #' @examples
-#' split_seq(1:8, l = 3)
+#' split_seq(sequence=1:5, l = 12)
 split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
   if (!is.null(l)) n <- ceiling(length(sequence) / l)
 
   if (is.null(split.labels)) split.labels <- seq_len(n)
 
+  # cut() fails on n=1, this avoids that.
+  if (n == 1){
+    splitter.f <- factor(rep(1,length(sequence)))
+  } else {
+    splitter.f <- cut(seq_along(sequence),
+        breaks = n,
+        labels = split.labels
+    )
+  }
+
   split(
     sequence,
-    cut(seq_along(sequence),
-      breaks = n,
-      labels = split.labels
-    )
+    splitter.f
   )
 }
 
