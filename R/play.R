@@ -16,9 +16,15 @@
 #'
 #' @examples
 #' cards(20) |>
-#'   sequence4one() |>
+#'   sequence4one(selection = "min") |>
+#'   purrr::pluck("sequence") |>
 #'   length()
-sequence4one <- function(data, g = 100, selection="min") {
+#' cards(20) |>
+#'   sequence4one(selection = "random") |>
+#'   purrr::pluck("sequence") |>
+#'   length()
+sequence4one <- function(data, g = 100, selection = "min") {
+  # browser()
   # In the case of small number of cards, just use all possible combinations to test
   if ((3^length(data)) < g) {
     g <- 3^length(data)
@@ -42,9 +48,17 @@ sequence4one <- function(data, g = 100, selection="min") {
       l[[length(l) + 1]] <- p
     }
 
-    # Breaks when l has length g
-    if ((length(l) == g)) {
-      break
+    if (selection == "random") {
+      if ((length(l) == 1)) {
+        break
+      }
+    } else if (selection == "min") {
+      # Breaks when l has length g
+      if ((length(l) == g)) {
+        break
+      }
+    } else {
+      stop("Selection strategy has to be either 'min' or 'random'.")
     }
   }
 
@@ -59,19 +73,12 @@ sequence4one <- function(data, g = 100, selection="min") {
         unique()
     })
 
-  seq.lengths <- seq.test |>
-    lengths()
+  ## If "random", seq.test has length 1.
+  index <- seq.test |>
+    lengths() |>
+    which.min()
 
-  if (selection=="min"){
-    index <- seq.lengths |>
-      which.min()
-  } else if (selection=="random"){
-    index <- 1
-  } else {
-    stop("Selection strategy has to be either 'min' or 'random'.")
-  }
-
-  list(cards=data,sequence=seq.test[[index]])
+  list(cards = data, sequence = seq.test[[index]])
 }
 
 
@@ -85,23 +92,26 @@ sequence4one <- function(data, g = 100, selection="min") {
 #'
 #' @examples
 #' cards(10) |>
-#' sequence4one() |>
-#' (\(.x) n_complete_rows(.x[[1]], .x[[2]]))()
+#'   sequence4one() |>
+#'   (\(.x) n_complete_rows(.x[[1]], .x[[2]]))()
 #'
-#' n_complete_rows(cards=cards(40)) |> factor() |> summary()
-n_complete_rows <- function(cards, sequence=NULL) {
+#' n_complete_rows(cards = cards(40)) |>
+#'   factor() |>
+#'   summary()
+n_complete_rows <- function(cards, sequence = NULL) {
   if (is.null(sequence)) {
     sequence <- sequence4one(cards) |>
       purrr::pluck("sequence")
-    }
-  cards |> purrr::map(\(.x){
-    apply(.x, 1, get_sequence) |>
-      apply(2, \(.y) {
-        .y %in% sequence |>
-          all()
-      }) |>
-      sum()
-  }) |>
+  }
+  cards |>
+    purrr::map(\(.x){
+      apply(.x, 1, get_sequence) |>
+        apply(2, \(.y) {
+          .y %in% sequence |>
+            all()
+        }) |>
+        sum()
+    }) |>
     purrr::list_c()
 }
 
@@ -116,17 +126,19 @@ n_complete_rows <- function(cards, sequence=NULL) {
 #'
 #' @examples
 #' cards <- cards(5)
-n_each_card <- function(cards, sequence=NULL) {
+#' n_each_card(cards(3), sample(1:90, 30))
+n_each_card <- function(cards, sequence = NULL) {
   if (is.null(sequence)) {
     sequence <- sequence4one(cards) |>
       purrr::pluck("sequence")
   }
-  cards |> purrr::map(\(.x){
-    get_sequence(.x) |>
-      (\(.y) {
-        .y %in% sequence
-      })() |>
-      sum()
-  }) |>
+  cards |>
+    purrr::map(\(.x){
+      get_sequence(.x) |>
+        (\(.y) {
+          .y %in% sequence
+        })() |>
+        sum()
+    }) |>
     purrr::list_c()
 }
