@@ -308,6 +308,68 @@ gg_card <- function(data, text.size = 14, title = NULL, note = NULL, id.hash = F
 
 
 
+
+
+
+
+
+
+
+gg_seq_heat <- function(data,
+                        text.size = 14,
+                        ncol = NULL,
+                        base.seq = 1:90,
+                        colors = c("white", "grey")) {
+  if (is.null(ncol)) {
+    ncol <- ceiling(sqrt(length(base.seq)))
+  }
+
+  nrow <- nrow(matrix(base.seq, ncol = ncol, byrow = TRUE))
+
+  d <- tibble::tibble(
+    text = base.seq,
+    presence = text %in% data,
+    x1 = rep(seq_len(ncol) - 1, times = nrow),
+    x2 = rep(seq_len(ncol), times = nrow),
+    y1 = rep(rev(seq_len(nrow) - 1), each = ncol),
+    y2 = rep(rev(seq_len(nrow)), each = ncol)
+  )
+
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_rect(
+      data = d,
+      ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2, fill = presence),
+      color = "black",
+      alpha = 1
+    ) +
+    ggplot2::geom_text(
+      data = d,
+      ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+      size = text.size, na.rm = TRUE
+    ) +
+    ggplot2::guides(fill = "none") +
+    ggplot2::theme_void()
+
+  if (!is.null(colors)) {
+    p <- p +
+      ggplot2::scale_fill_manual(values = colors)
+  }
+
+  structure(p,
+    class = c("gg_seq_heat", class(p))
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
 seq_iter <- function(i, n) {
   seq((i - 1) * n + 1, i * n)
 }
@@ -330,6 +392,7 @@ seq_iter <- function(i, n) {
 cards_grob <- function(data,
                        n = 5,
                        note = "agdamsbo/banko") {
+
   assertthat::assert_that(
     "gg_card" %in% (purrr::map(data, class) |> purrr::list_c())
   )
@@ -345,6 +408,10 @@ cards_grob <- function(data,
   }
 
   structure(pl, class = c("arrangelist", class(data)))
+}
+
+gg2grob <- function(data,...){
+  structure(ggplot2::ggplotGrob(data,...), class = c("arrangelist", class(data)))
 }
 
 
@@ -367,23 +434,27 @@ cards_grob <- function(data,
 travebanko <- function(data,
                        stops,
                        post.footer = "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'%d-%m-%Y')}.",
-                       post.header = "Post {sign.index}") {
+                       post.header = "Post {sign.index}"
+                       ) {
+  # browser()
   cards_list <- data |>
     sequence4one()
 
+  heat <- cards_list[["sequence"]] |> gg_seq_heat() |> ggplot2::ggplotGrob()
+
   front <- cards_list |>
     (\(.x){
-      stats_walk(.x[[1]], .x[[2]], stops = stops)
+      stats_walk(.x[["cards"]], .x[["sequence"]], stops = stops)
     })()
 
-  signs <- cards_list[[2]] |> stops_walk(stops = stops,header = post.header)
+  signs <- cards_list[[2]] |> stops_walk(stops = stops, header = post.header)
 
   signs_grob <- signs |>
-    purrr::imap(\(.x,sign.index){
+    purrr::imap(\(.x, sign.index){
       l <- purrr::map2(
         .x,
         list(c(70, "bold"), c(50, "plain")) |>
-          purrr::map(\(.y)stats::setNames(.y,c("size", "weight"))),
+          purrr::map(\(.y)stats::setNames(.y, c("size", "weight"))),
         \(.y, .i){
           grid::textGrob(.y,
             gp = grid::gpar(
@@ -404,6 +475,7 @@ travebanko <- function(data,
   structure(
     list(
       front |> grid::textGrob() |> list(),
+      heat |> list(),
       signs_grob,
       data |> purrr::map(gg_card) |> cards_grob()
     ) |> unlist(recursive = FALSE),
@@ -468,11 +540,11 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 
 
 
-stops_walk <- function(sequence, stops, header="Post {sign.index}") {
+stops_walk <- function(sequence, stops, header = "Post {sign.index}") {
   ls <- split_seq(sequence, n = stops)
 
   ## Adds 99 if the leement has length 0. Edge case for few cards and many stops.
-  ls[lengths(ls)==0] <- 99
+  ls[lengths(ls) == 0] <- 99
 
   ls |>
     purrr::imap(\(.x, sign.index){
@@ -502,12 +574,12 @@ split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
   if (is.null(split.labels)) split.labels <- seq_len(n)
 
   # cut() fails on n=1, this avoids that.
-  if (n == 1){
-    splitter.f <- factor(rep(1,length(sequence)))
+  if (n == 1) {
+    splitter.f <- factor(rep(1, length(sequence)))
   } else {
     splitter.f <- cut(seq_along(sequence),
-        breaks = n,
-        labels = split.labels
+      breaks = n,
+      labels = split.labels
     )
   }
 
@@ -565,7 +637,13 @@ export_pdf <- function(list,
 
 
 
-sequence4one <- function(data, g = 100, selection="min") {
+
+
+
+
+
+sequence4one <- function(data, g = 100, selection = "min") {
+  # browser()
   # In the case of small number of cards, just use all possible combinations to test
   if ((3^length(data)) < g) {
     g <- 3^length(data)
@@ -589,9 +667,17 @@ sequence4one <- function(data, g = 100, selection="min") {
       l[[length(l) + 1]] <- p
     }
 
-    # Breaks when l has length g
-    if ((length(l) == g)) {
-      break
+    if (selection == "random") {
+      if ((length(l) == 1)) {
+        break
+      }
+    } else if (selection == "min") {
+      # Breaks when l has length g
+      if ((length(l) == g)) {
+        break
+      }
+    } else {
+      stop("Selection strategy has to be either 'min' or 'random'.")
     }
   }
 
@@ -606,19 +692,12 @@ sequence4one <- function(data, g = 100, selection="min") {
         unique()
     })
 
-  seq.lengths <- seq.test |>
-    lengths()
+  ## If "random", seq.test has length 1.
+  index <- seq.test |>
+    lengths() |>
+    which.min()
 
-  if (selection=="min"){
-    index <- seq.lengths |>
-      which.min()
-  } else if (selection=="random"){
-    index <- 1
-  } else {
-    stop("Selection strategy has to be either 'min' or 'random'.")
-  }
-
-  list(cards=data,sequence=seq.test[[index]])
+  list(cards = data, sequence = seq.test[[index]])
 }
 
 
@@ -636,19 +715,22 @@ sequence4one <- function(data, g = 100, selection="min") {
 
 
 
-n_complete_rows <- function(cards, sequence=NULL) {
+
+
+n_complete_rows <- function(cards, sequence = NULL) {
   if (is.null(sequence)) {
     sequence <- sequence4one(cards) |>
       purrr::pluck("sequence")
-    }
-  cards |> purrr::map(\(.x){
-    apply(.x, 1, get_sequence) |>
-      apply(2, \(.y) {
-        .y %in% sequence |>
-          all()
-      }) |>
-      sum()
-  }) |>
+  }
+  cards |>
+    purrr::map(\(.x){
+      apply(.x, 1, get_sequence) |>
+        apply(2, \(.y) {
+          .y %in% sequence |>
+            all()
+        }) |>
+        sum()
+    }) |>
     purrr::list_c()
 }
 
@@ -663,18 +745,20 @@ n_complete_rows <- function(cards, sequence=NULL) {
 
 
 
-n_each_card <- function(cards, sequence=NULL) {
+
+n_each_card <- function(cards, sequence = NULL) {
   if (is.null(sequence)) {
     sequence <- sequence4one(cards) |>
       purrr::pluck("sequence")
   }
-  cards |> purrr::map(\(.x){
-    get_sequence(.x) |>
-      (\(.y) {
-        .y %in% sequence
-      })() |>
-      sum()
-  }) |>
+  cards |>
+    purrr::map(\(.x){
+      get_sequence(.x) |>
+        (\(.y) {
+          .y %in% sequence
+        })() |>
+        sum()
+    }) |>
     purrr::list_c()
 }
 

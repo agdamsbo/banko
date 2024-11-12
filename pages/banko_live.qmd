@@ -10,7 +10,7 @@ filters:
 
 Her kan du lave bankoplader, og plader og poster til at spille travebanko med FDFerne, spejderne, familien eller vennerne. God fornøjelse!
 
-Alt afvikles i din browser, så det tager lige et øjeblik at lave plader og evt. poster. Det skal nok komme, men være lige lidt tålmodig :)
+Alt afvikles i din browser, så det tager lige et øjeblik at lave plader og evt. poster. Det skal nok komme, men vær lige lidt tålmodig :)
 
 ```{shinylive-r}
 #| standalone: true
