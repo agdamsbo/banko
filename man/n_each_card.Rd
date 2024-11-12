@@ -19,4 +19,5 @@ Gives number of correct fields on each card from sequence
 }
 \examples{
 cards <- cards(5)
+n_each_card(cards(3), sample(1:90, 30))
 }

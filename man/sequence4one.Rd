@@ -25,6 +25,11 @@ Could be used for travebanko with FDF, the scouts or others.
 }
 \examples{
 cards(20) |>
-  sequence4one() |>
+  sequence4one(selection = "min") |>
+  purrr::pluck("sequence") |>
+  length()
+cards(20) |>
+  sequence4one(selection = "random") |>
+  purrr::pluck("sequence") |>
   length()
 }

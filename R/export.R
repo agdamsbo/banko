@@ -135,6 +135,68 @@ gg_card <- function(data, text.size = 14, title = NULL, note = NULL, id.hash = F
   )
 }
 
+
+#' Plot sample of base sequence as binary heatmap
+#'
+#' @param data numeric vector
+#' @param text.size text size. Default 14.
+#' @param ncol number of columns to plot. Defaults to ceiling(sqrt(length(base.seq)))
+#' @param base.seq numeric vector to plot. Default is 1:90
+#' @param colors colors for heatmap. Defaults is c("white","grey").
+#'
+#' @return ggplot2 list object
+#' @export
+#'
+#' @examples
+#' cards(5)[[1]] |>
+#'   get_sequence() |>
+#'   gg_seq_heat(colors = c("white", "grey"))
+#' c() |> gg_seq_heat(colors = c("white", "grey"),base.seq=sample(1:100,25))
+gg_seq_heat <- function(data,
+                        text.size = 14,
+                        ncol = NULL,
+                        base.seq = 1:90,
+                        colors = c("white", "grey")) {
+  if (is.null(ncol)) {
+    ncol <- ceiling(sqrt(length(base.seq)))
+  }
+
+  nrow <- nrow(matrix(base.seq, ncol = ncol, byrow = TRUE))
+
+  d <- tibble::tibble(
+    text = base.seq,
+    presence = text %in% data,
+    x1 = rep(seq_len(ncol) - 1, times = nrow),
+    x2 = rep(seq_len(ncol), times = nrow),
+    y1 = rep(rev(seq_len(nrow) - 1), each = ncol),
+    y2 = rep(rev(seq_len(nrow)), each = ncol)
+  )
+
+  p <- ggplot2::ggplot() +
+    ggplot2::geom_rect(
+      data = d,
+      ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2, fill = presence),
+      color = "black",
+      alpha = 1
+    ) +
+    ggplot2::geom_text(
+      data = d,
+      ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+      size = text.size, na.rm = TRUE
+    ) +
+    ggplot2::guides(fill = "none") +
+    ggplot2::theme_void()
+
+  if (!is.null(colors)) {
+    p <- p +
+      ggplot2::scale_fill_manual(values = colors)
+  }
+
+  structure(p,
+    class = c("gg_seq_heat", class(p))
+  )
+}
+
 #' Iterative sequence
 #'
 #' @param i iteration
@@ -160,13 +222,14 @@ seq_iter <- function(i, n) {
 #'
 #' @examples
 #' # Not evaluated
-#' # cards(20) |>
-#' # purrr::map(gg_card) |>
-#' # cards_grob() |>
-#' # export_pdf(path = "banko.pdf")
+#' cards(20) |>
+#' purrr::map(gg_card) |>
+#' cards_grob() |>
+#' export_pdf(path = "banko.pdf")
 cards_grob <- function(data,
                        n = 5,
                        note = "agdamsbo/banko") {
+
   assertthat::assert_that(
     "gg_card" %in% (purrr::map(data, class) |> purrr::list_c())
   )
@@ -182,6 +245,10 @@ cards_grob <- function(data,
   }
 
   structure(pl, class = c("arrangelist", class(data)))
+}
+
+gg2grob <- function(data,...){
+  structure(ggplot2::ggplotGrob(data,...), class = c("arrangelist", class(data)))
 }
 
 #' Travebanko grob merge
@@ -204,23 +271,27 @@ cards_grob <- function(data,
 travebanko <- function(data,
                        stops,
                        post.footer = "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'%d-%m-%Y')}.",
-                       post.header = "Post {sign.index}") {
+                       post.header = "Post {sign.index}"
+                       ) {
+  # browser()
   cards_list <- data |>
     sequence4one()
 
+  heat <- cards_list[["sequence"]] |> gg_seq_heat() |> ggplot2::ggplotGrob()
+
   front <- cards_list |>
     (\(.x){
-      stats_walk(.x[[1]], .x[[2]], stops = stops)
+      stats_walk(.x[["cards"]], .x[["sequence"]], stops = stops)
     })()
 
-  signs <- cards_list[[2]] |> stops_walk(stops = stops,header = post.header)
+  signs <- cards_list[[2]] |> stops_walk(stops = stops, header = post.header)
 
   signs_grob <- signs |>
-    purrr::imap(\(.x,sign.index){
+    purrr::imap(\(.x, sign.index){
       l <- purrr::map2(
         .x,
         list(c(70, "bold"), c(50, "plain")) |>
-          purrr::map(\(.y)stats::setNames(.y,c("size", "weight"))),
+          purrr::map(\(.y)stats::setNames(.y, c("size", "weight"))),
         \(.y, .i){
           grid::textGrob(.y,
             gp = grid::gpar(
@@ -241,6 +312,7 @@ travebanko <- function(data,
   structure(
     list(
       front |> grid::textGrob() |> list(),
+      heat |> list(),
       signs_grob,
       data |> purrr::map(gg_card) |> cards_grob()
     ) |> unlist(recursive = FALSE),
@@ -305,11 +377,11 @@ Tal paa poster: \n {split_seq(sequence,l=15) |> purrr::map(paste,collapse=' ') |
 #'   (\(.x){
 #'     stops_walk(.x[[2]], stops = 10)
 #'   })()
-stops_walk <- function(sequence, stops, header="Post {sign.index}") {
+stops_walk <- function(sequence, stops, header = "Post {sign.index}") {
   ls <- split_seq(sequence, n = stops)
 
   ## Adds 99 if the leement has length 0. Edge case for few cards and many stops.
-  ls[lengths(ls)==0] <- 99
+  ls[lengths(ls) == 0] <- 99
 
   ls |>
     purrr::imap(\(.x, sign.index){
@@ -332,19 +404,19 @@ stops_walk <- function(sequence, stops, header="Post {sign.index}") {
 #' @export
 #'
 #' @examples
-#' split_seq(sequence=1:5, l = 12)
+#' split_seq(sequence = 1:5, l = 12)
 split_seq <- function(sequence, n = NULL, l = NULL, split.labels = NULL) {
   if (!is.null(l)) n <- ceiling(length(sequence) / l)
 
   if (is.null(split.labels)) split.labels <- seq_len(n)
 
   # cut() fails on n=1, this avoids that.
-  if (n == 1){
-    splitter.f <- factor(rep(1,length(sequence)))
+  if (n == 1) {
+    splitter.f <- factor(rep(1, length(sequence)))
   } else {
     splitter.f <- cut(seq_along(sequence),
-        breaks = n,
-        labels = split.labels
+      breaks = n,
+      labels = split.labels
     )
   }
 

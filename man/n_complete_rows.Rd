@@ -19,8 +19,10 @@ Number of complete rows in each card from sequence
 }
 \examples{
 cards(10) |>
-sequence4one() |>
-(\(.x) n_complete_rows(.x[[1]], .x[[2]]))()
+  sequence4one() |>
+  (\(.x) n_complete_rows(.x[[1]], .x[[2]]))()
 
-n_complete_rows(cards=cards(40)) |> factor() |> summary()
+n_complete_rows(cards = cards(40)) |>
+  factor() |>
+  summary()
 }

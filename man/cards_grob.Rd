@@ -21,8 +21,8 @@ Multipage multicard PDF export
 }
 \examples{
 # Not evaluated
-# cards(20) |>
-# purrr::map(gg_card) |>
-# cards_grob() |>
-# export_pdf(path = "banko.pdf")
+cards(20) |>
+purrr::map(gg_card) |>
+cards_grob() |>
+export_pdf(path = "banko.pdf")
 }

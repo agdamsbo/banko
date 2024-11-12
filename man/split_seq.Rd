@@ -22,5 +22,5 @@ list
 Splits sequence in n groups of equal size or groups of max l
 }
 \examples{
-split_seq(sequence=1:5, l = 12)
+split_seq(sequence = 1:5, l = 12)
 }
