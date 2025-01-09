@@ -147,5 +147,18 @@ unique_numbers <- function(cards) {
     purrr::list_c() |>
     unique()
 
-  sample(ns, size = length(ns), replace = FALSE)
+  shuffle_seq(ns)
+}
+
+#' Randomly shuffles the order of a vector
+#'
+#' @param data vector
+#'
+#' @returns vector
+#' @export
+#'
+#' @examples
+#' 1:10 |> shuffle_seq()
+shuffle_seq <- function(data){
+  sample(data, size = length(data), replace = FALSE)
 }

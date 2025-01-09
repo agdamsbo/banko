@@ -78,7 +78,10 @@ sequence4one <- function(data, g = 100, selection = "min") {
     lengths() |>
     which.min()
 
-  list(cards = data, sequence = seq.test[[index]])
+  ## Shuffle sequence order
+  sequence <- seq.test[[index]] |> shuffle_seq()
+
+  list(cards = data, sequence = sequence)
 }
 
 
