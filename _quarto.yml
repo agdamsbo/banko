@@ -16,5 +16,7 @@ website:
         text: "Play"
       - href: LICENSE.md
         text: License
+      - href: NEWS.md
+        text: Changelog
       # - href: reference/index.html
       #   text: "Refeference"

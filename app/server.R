@@ -153,7 +153,20 @@ unique_numbers <- function(cards) {
     purrr::list_c() |>
     unique()
 
-  sample(ns, size = length(ns), replace = FALSE)
+  shuffle_seq(ns)
+}
+
+
+
+
+
+
+
+
+
+
+shuffle_seq <- function(data){
+  sample(data, size = length(data), replace = FALSE)
 }
 
 
@@ -697,7 +710,10 @@ sequence4one <- function(data, g = 100, selection = "min") {
     lengths() |>
     which.min()
 
-  list(cards = data, sequence = seq.test[[index]])
+  ## Shuffle sequence order
+  sequence <- seq.test[[index]] |> shuffle_seq()
+
+  list(cards = data, sequence = sequence)
 }
 
 

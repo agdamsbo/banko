@@ -1,7 +1,7 @@
 Package: banko
 Type: Package
 Title: banko game
-Version: 24.11.1
+Version: 25.1.1
 Authors@R: 
     person(given="Andreas Gammelgaard", family="Damsbo", email="andreas@gdamsbo.dk", role = c("aut", "cre"))
 Description: Play Danish banko and travebanko. Card generation inspired from https://github.com/skipperkongen/banko/.
