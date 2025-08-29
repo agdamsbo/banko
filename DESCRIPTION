@@ -1,7 +1,7 @@
 Package: banko
 Type: Package
 Title: banko game
-Version: 25.1.1
+Version: 25.8.1
 Authors@R: 
     person(given="Andreas Gammelgaard", family="Damsbo", email="andreas@gdamsbo.dk", role = c("aut", "cre"))
 Description: Play Danish banko and travebanko. Card generation inspired from https://github.com/skipperkongen/banko/.
@@ -21,7 +21,10 @@ Imports:
     gridExtra,
     purrr,
     tibble,
-    shinylive
+    shinylive,
+    magick,
+    grid,
+    grDevices
 Suggests: 
     spelling
 Language: en-US

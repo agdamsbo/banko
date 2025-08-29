@@ -12,3 +12,4 @@ app/rsconnect/
 /.quarto/
 live/
 dev/
+._*

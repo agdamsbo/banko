@@ -6,8 +6,16 @@
 
 project.aid::merge_scripts(
   files = c(
-    list.files("R/", pattern = ".R$", full.names = TRUE),
-    "app/server_raw.R"
+    list.files("R", pattern = ".R$", full.names = TRUE),
+    "https://raw.githubusercontent.com/agdamsbo/project.aid/refs/heads/main/R/chunks_of_n.R"
+  ),
+  dest = here::here("app/functions.R")
+)
+
+project.aid::merge_scripts(
+  files = c(
+    here::here("app/functions.R"),
+    here::here("app/server_raw.R")
   ),
   dest = here::here("app/server.R")
 )
