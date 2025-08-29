@@ -10,16 +10,14 @@ utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
 #' @examples
 #' cards(5) |> purrr::map(plot)
 #'
-#' cards(5)[[1]] |> plot()
+#' cards(1)[[1]] |> plot()
 plot.banko <- function(x, ...) {
   old <- graphics::par(pty = "s", mar = c(0, 0, 0, 0))
-  ncol <- dim(x)[2]
-  nrow <- dim(x)[1]
   on.exit(graphics::par(old))
-
+  # browser()
   graphics::plot(
-    c(0, 9),
-    c(0, -9),
+    c(0, col(x)),
+    c(0, -col(x)),
     type = "n",
     xlab = "",
     ylab = "",
@@ -33,13 +31,81 @@ plot.banko <- function(x, ...) {
     col = NULL,
     border = NULL
   )
-  graphics::text(col(x) - 0.5,
+  graphics::text(
+    col(x) - 0.5,
     -row(x) + 0.5,
     get_sequence(x, no_nas = FALSE),
     cex = 2,
     col = "black",
   )
 }
+
+#' Prepare matrix for gg_card
+#'
+#' @param data any object with two dimensions (data.frame or matrix)
+#'
+#' @returns tibble
+#' @export
+#'
+#' @examples
+#' matrix(1:10, ncol = 5) |> prepare_gg_card()
+#' matrix(seq(2 * 3), ncol = 2) |> prepare_gg_card()
+prepare_gg_card <- function(data) {
+  dim <- dim(data)
+  stopifnot(length(dim) == 2)
+
+  height <- dim[1]
+  width <- dim[2]
+
+  tibble::tibble(
+    key = as.character(get_sequence(data, no_nas = FALSE)),
+    x1 = rep(seq(width) - 1, each = height),
+    x2 = rep(seq(width), each = height),
+    y1 = rep(rev(seq(height)) - 1, times = width),
+    y2 = rep(rev(seq(height)), times = width)
+  )
+}
+
+base_gg_card <- function(data,text.size = 14){
+  stopifnot(all(c("key","x1","x2","y1","y2")%in%names(data)))
+
+  p <- ggplot2::ggplot(
+    data = data,
+    ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2,xmin = x1, xmax = x2, ymin = y1, ymax = y2)
+  )
+
+  if ("presence" %in% names(data)){
+    p <- p +
+      ggplot2::geom_rect(
+        ggplot2::aes(fill = presence),
+        alpha = .5, color = "black"
+      )+
+      ggplot2::guides(fill = "none")
+  }
+
+  p <- p +
+    ggplot2::geom_rect(
+      # ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2),
+      color = "black",
+      alpha = 0
+    )
+
+  if (any(grepl("*[\\.svg|\\.png]$", data$key))) {
+    p <- p +
+      geom_image(ggplot2::aes(image = key), size = text.size / 50)
+  } else {
+    p <- p +
+      ggplot2::geom_text(
+        ggplot2::aes(label = key),
+        size = text.size,
+        na.rm = TRUE
+      )
+  }
+
+  p +
+    ggplot2::theme_void()
+}
+
 
 #' Print banko cards with ggplot2
 #'
@@ -57,30 +123,18 @@ plot.banko <- function(x, ...) {
 #' data |> gg_card()
 #' cards(5) |>
 #'   purrr::map(gg_card)
+#' cards(5) |>
+#'   lapply(gg_card)
+#' bingo(5, base = LETTERS)[[1]] |> gg_card()
+#' bingo(2, base = list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms", full.names = TRUE))[[1]] |> gg_card()
+#' bingo(2, base = LETTERS, dim = c(2, 5))[[1]] |> gg_card()
+#' memory()[[1]] |> gg_card()
 gg_card <- function(data, text.size = 14, title = NULL, note = NULL, id.hash = FALSE) {
   assertthat::assert_that("banko" %in% class(data))
+  # browser()
+  d <- prepare_gg_card(data)
 
-  d <- tibble::tibble(
-    text = get_sequence(data, no_nas = FALSE),
-    x1 = rep(0:8, each = 3),
-    x2 = rep(1:9, each = 3),
-    y1 = rep(2:0, times = 9),
-    y2 = rep(3:1, times = 9)
-  )
-
-  p <- ggplot2::ggplot() +
-    ggplot2::geom_rect(
-      data = d,
-      ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2),
-      color = "black",
-      alpha = 0
-    ) +
-    ggplot2::geom_text(
-      data = d,
-      ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
-      size = text.size, na.rm = TRUE
-    ) +
-    ggplot2::theme_void()
+  p <- base_gg_card(d,text.size=text.size)
 
   if (!is.null(title)) {
     t <- tibble::tibble(
@@ -98,7 +152,7 @@ gg_card <- function(data, text.size = 14, title = NULL, note = NULL, id.hash = F
       ) +
       ggplot2::geom_text(
         data = t,
-        ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+        ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = key),
         size = text.size
       )
   }
@@ -124,17 +178,36 @@ gg_card <- function(data, text.size = 14, title = NULL, note = NULL, id.hash = F
       ) +
       ggplot2::geom_text(
         data = t,
-        ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
+        ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = key),
         size = text.size / 2
       )
   }
-
+  # browser()
   structure(p,
     class = c("gg_card", class(p)),
     banko_seed = attr(data, which = "banko_seed")
   )
 }
 
+#' Extend sequence with specified fill to match target length
+#'
+#' @param data vector
+#' @param target numeric
+#' @param fill vector
+#'
+#' @returns vector
+#' @export
+#'
+#' @examples
+#' extend_seq(1:3, 8)
+extend_seq <- function(data, target, fill = NA) {
+  # browser()
+  if (length(data) < target) {
+    c(data, rep(fill, target - length(data)))[seq(target)]
+  } else {
+    data
+  }
+}
 
 #' Plot sample of base sequence as binary heatmap
 #'
@@ -151,7 +224,8 @@ gg_card <- function(data, text.size = 14, title = NULL, note = NULL, id.hash = F
 #' cards(5)[[1]] |>
 #'   get_sequence() |>
 #'   gg_seq_heat(colors = c("white", "grey"))
-#' c() |> gg_seq_heat(colors = c("white", "grey"),base.seq=sample(1:100,25))
+#' c() |> gg_seq_heat(colors = c("white", "grey"), base.seq = sample(1:100, 25))
+#' c() |> gg_seq_heat(colors = c("white", "grey"), base.seq = LETTERS)
 gg_seq_heat <- function(data,
                         text.size = 14,
                         ncol = NULL,
@@ -161,31 +235,12 @@ gg_seq_heat <- function(data,
     ncol <- ceiling(sqrt(length(base.seq)))
   }
 
-  nrow <- nrow(matrix(base.seq, ncol = ncol, byrow = TRUE))
+  nrow <- ceiling(length(base.seq) / ncol)
 
-  d <- tibble::tibble(
-    text = base.seq,
-    presence = text %in% data,
-    x1 = rep(seq_len(ncol) - 1, times = nrow),
-    x2 = rep(seq_len(ncol), times = nrow),
-    y1 = rep(rev(seq_len(nrow) - 1), each = ncol),
-    y2 = rep(rev(seq_len(nrow)), each = ncol)
-  )
+  d <- prepare_gg_card(matrix(extend_seq(base.seq, prod(ncol, nrow)),ncol=ncol)) |>
+    dplyr::mutate(presence = key %in% data)
 
-  p <- ggplot2::ggplot() +
-    ggplot2::geom_rect(
-      data = d,
-      ggplot2::aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2, fill = presence),
-      color = "black",
-      alpha = 1
-    ) +
-    ggplot2::geom_text(
-      data = d,
-      ggplot2::aes(x = x1 + (x2 - x1) / 2, y = y1 + (y2 - y1) / 2, label = text),
-      size = text.size, na.rm = TRUE
-    ) +
-    ggplot2::guides(fill = "none") +
-    ggplot2::theme_void()
+  p <- base_gg_card(d)
 
   if (!is.null(colors)) {
     p <- p +
@@ -222,14 +277,42 @@ seq_iter <- function(i, n) {
 #'
 #' @examples
 #' # Not evaluated
-#' cards(20) |>
-#' purrr::map(gg_card) |>
-#' cards_grob() |>
-#' export_pdf(path = "banko.pdf")
+#' cards(5) |>
+#'   purrr::map(gg_card) |>
+#'   cards_grob() |>
+#'   export_pdf(path = "banko.pdf")
+#'
+#' bingo(5,
+#'   base = list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms",
+#'     full.names = TRUE
+#'   )
+#' ) |>
+#'   purrr::map(gg_card) |>
+#'   cards_grob() |>
+#'   export_pdf(path = "bingo.pdf")
+#'
+#' memory(
+#'   n = 10,
+#'   base = list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms",
+#'     full.names = TRUE
+#'   )
+#' ) |>
+#'   purrr::map(gg_card) |>
+#'   cards_grob() |>
+#'   export_pdf(path = "memory.pdf")
+#'
+#' memory(
+#'   n = 10,
+#'   base = list.files("/Users/au301842/Downloads/twemoji-color-font-main/assets/twemoji-svg",
+#'     full.names = TRUE
+#'   )
+#' ) |>
+#'   purrr::map(gg_card) |>
+#'   cards_grob() |>
+#'   export_pdf(path = "memory_emoji.pdf")
 cards_grob <- function(data,
                        n = 5,
                        note = "agdamsbo/banko") {
-
   assertthat::assert_that(
     "gg_card" %in% (purrr::map(data, class) |> purrr::list_c())
   )
@@ -247,9 +330,9 @@ cards_grob <- function(data,
   structure(pl, class = c("arrangelist", class(data)))
 }
 
-gg2grob <- function(data,...){
-  structure(ggplot2::ggplotGrob(data,...), class = c("arrangelist", class(data)))
-}
+# gg2grob <- function(data, ...) {
+#   structure(ggplot2::ggplotGrob(data, ...), class = c("arrangelist", class(data)))
+# }
 
 #' Travebanko grob merge
 #'
@@ -271,13 +354,14 @@ gg2grob <- function(data,...){
 travebanko <- function(data,
                        stops,
                        post.footer = "Post {sign.index} of {stops}. Put up on {format(Sys.Date(),'%d-%m-%Y')}.",
-                       post.header = "Post {sign.index}"
-                       ) {
+                       post.header = "Post {sign.index}") {
   # browser()
   cards_list <- data |>
     sequence4one()
 
-  heat <- cards_list[["sequence"]] |> gg_seq_heat() |> ggplot2::ggplotGrob()
+  heat <- cards_list[["sequence"]] |>
+    gg_seq_heat() |>
+    ggplot2::ggplotGrob()
 
   front <- cards_list |>
     (\(.x){
