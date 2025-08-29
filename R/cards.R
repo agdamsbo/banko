@@ -167,6 +167,18 @@ shuffle_seq <- function(data) {
   sample(data, size = length(data), replace = FALSE)
 }
 
+#' Generate bingo boards
+#'
+#' @param dim card dimensions. Default is c(2,3)
+#' @param base Base sequence. Default is 1:90. Can be a vector of numbers,
+#' characters, character strings or image/icon file paths.
+#' @param sort Flag if card sequence should be sorted. Default is TRUE.
+#'
+#' @returns matrix of banko class
+#' @export
+#'
+#' @examples
+#' generate_bingo()
 generate_bingo <- function(dim = c(2, 3), base = 1:90, sort = FALSE) {
   out <- sample(base, prod(dim))
   if (isTRUE(sort)) {
@@ -177,19 +189,25 @@ generate_bingo <- function(dim = c(2, 3), base = 1:90, sort = FALSE) {
 
 #' Create unique bingo cards with specified dimensions and custom base
 #'
-#' @param n
-#' @param dim
-#' @param base
-#' @param sort
-#' @param seed
+#' @description
+#' In bingo unique cards are created with each item occuring several times, but
+#' only once on each board.
 #'
-#' @returns
+#'
+#' @param n number of cards. Required.
+#' @param dim card dimensions. Default is c(2,3)
+#' @param base Base sequence. Default is 1:90. Can be a vector of numbers,
+#' characters, character strings or image/icon file paths.
+#' @param sort Flag if card sequence should be sorted. Default is TRUE.
+#' @param seed seed
+#'
+#' @returns list of banko_list class with elements of banko class
 #' @export
 #'
 #' @examples
 #' bingo(2, base = 1:15, sort = TRUE)
 #' bingo(2, base = list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms", full.names = TRUE))
-bingo <- function(n, dim = c(2, 3), base = 1:90, sort = FALSE, seed = NULL) {
+bingo <- function(n, dim = c(2, 3), base = 1:90, sort = TRUE, seed = NULL) {
   if (is.null(seed)) seed <- abs(sample(.Random.seed, 1))
 
   set.seed(seed)
@@ -221,15 +239,19 @@ bingo <- function(n, dim = c(2, 3), base = 1:90, sort = FALSE, seed = NULL) {
   )
 }
 
-#' Title
+#' Create memory card
 #'
-#' @param n
-#' @param dim
-#' @param base
-#' @param sort
-#' @param seed
+#' @description
+#' Each element only occurs once
 #'
-#' @returns
+#'
+#' @param n number of cards. Default is NULL and will create all possible cards
+#' @param dim card dimensions. Default is c(2,3)
+#' @param base Base sequence. Default is 1:90
+#' @param sort Flag if card sequence should be sorted.
+#' @param seed seed
+#'
+#' @returns list of banko_list class with elements of banko class
 #' @export
 #'
 #' @examples

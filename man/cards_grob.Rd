@@ -21,8 +21,37 @@ Multipage multicard PDF export
 }
 \examples{
 # Not evaluated
-cards(20) |>
-purrr::map(gg_card) |>
-cards_grob() |>
-export_pdf(path = "banko.pdf")
+cards(5) |>
+  purrr::map(gg_card) |>
+  cards_grob() |>
+  export_pdf(path = "banko.pdf")
+
+bingo(5,
+  base = list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms",
+    full.names = TRUE
+  )
+) |>
+  purrr::map(gg_card) |>
+  cards_grob() |>
+  export_pdf(path = "bingo.pdf")
+
+memory(
+  n = 10,
+  base = list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms",
+    full.names = TRUE
+  )
+) |>
+  purrr::map(gg_card) |>
+  cards_grob() |>
+  export_pdf(path = "memory.pdf")
+
+memory(
+  n = 10,
+  base = list.files("/Users/au301842/Downloads/twemoji-color-font-main/assets/twemoji-svg",
+    full.names = TRUE
+  )
+) |>
+  purrr::map(gg_card) |>
+  cards_grob() |>
+  export_pdf(path = "memory_emoji.pdf")
 }

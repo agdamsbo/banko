@@ -1,13 +1,13 @@
 
 
 ########
-#### Current file: /Volumes/FREESEARCHR/FreesearchR/banko/app/functions.R
+#### Current file: /Volumes/FREESEARCHR/FreesearchR/banko/app/functions.R 
 ########
 
 
 
 ########
-#### Current file: R/cards.R
+#### Current file: R/cards.R 
 ########
 
 
@@ -179,6 +179,18 @@ shuffle_seq <- function(data) {
   sample(data, size = length(data), replace = FALSE)
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 generate_bingo <- function(dim = c(2, 3), base = 1:90, sort = FALSE) {
   out <- sample(base, prod(dim))
   if (isTRUE(sort)) {
@@ -201,7 +213,13 @@ generate_bingo <- function(dim = c(2, 3), base = 1:90, sort = FALSE) {
 
 
 
-bingo <- function(n, dim = c(2, 3), base = 1:90, sort = FALSE, seed = NULL) {
+
+
+
+
+
+
+bingo <- function(n, dim = c(2, 3), base = 1:90, sort = TRUE, seed = NULL) {
   if (is.null(seed)) seed <- abs(sample(.Random.seed, 1))
 
   set.seed(seed)
@@ -247,6 +265,10 @@ bingo <- function(n, dim = c(2, 3), base = 1:90, sort = FALSE, seed = NULL) {
 
 
 
+
+
+
+
 memory <- function(n = NULL, dim = c(2, 3), base = 1:90, sort = FALSE, seed = NULL) {
   if (is.null(seed)) seed <- abs(sample(.Random.seed, 1))
 
@@ -277,7 +299,7 @@ memory <- function(n = NULL, dim = c(2, 3), base = 1:90, sort = FALSE, seed = NU
 
 
 ########
-#### Current file: R/export.R
+#### Current file: R/export.R 
 ########
 
 utils::globalVariables(c("text", "x1", "x2", "y1", "y2"))
@@ -817,7 +839,7 @@ export_pdf <- function(list,
 
 
 ########
-#### Current file: R/gg_image.R
+#### Current file: R/geom_image.R 
 ########
 
 library(ggplot2)
@@ -1261,7 +1283,7 @@ compute_just <- getFromNamespace("compute_just", "ggplot2")
 
 
 ########
-#### Current file: R/play.R
+#### Current file: R/play.R 
 ########
 
 
@@ -1414,26 +1436,7 @@ n_each_card <- function(cards, sequence = NULL) {
 
 
 ########
-#### Current file: R/visual.R
-########
-
-
-
-f1 <- list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms",full.names = TRUE) |>
-  sample(10)
-
-d <- data.frame(
-  x = 1:10,
-  y = 1:10,
-  image=f1)
-
-ggplot2::ggplot(d, ggplot2::aes(x,y)) + geom_image(ggplot2::aes(image=image),size=.12)
-
-
-
-
-########
-#### Current file: https://raw.githubusercontent.com/agdamsbo/project.aid/refs/heads/main/R/chunks_of_n.R
+#### Current file: https://raw.githubusercontent.com/agdamsbo/project.aid/refs/heads/main/R/chunks_of_n.R 
 ########
 
 
@@ -1520,7 +1523,7 @@ n_chunks <- function(d, n, ...) {
 
 
 ########
-#### Current file: /Volumes/FREESEARCHR/FreesearchR/banko/app/server_raw.R
+#### Current file: /Volumes/FREESEARCHR/FreesearchR/banko/app/server_raw.R 
 ########
 
 

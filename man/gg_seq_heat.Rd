@@ -33,5 +33,6 @@ Plot sample of base sequence as binary heatmap
 cards(5)[[1]] |>
   get_sequence() |>
   gg_seq_heat(colors = c("white", "grey"))
-c() |> gg_seq_heat(colors = c("white", "grey"),base.seq=sample(1:100,25))
+c() |> gg_seq_heat(colors = c("white", "grey"), base.seq = sample(1:100, 25))
+c() |> gg_seq_heat(colors = c("white", "grey"), base.seq = LETTERS)
 }

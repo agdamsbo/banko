@@ -173,6 +173,18 @@ shuffle_seq <- function(data) {
   sample(data, size = length(data), replace = FALSE)
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 generate_bingo <- function(dim = c(2, 3), base = 1:90, sort = FALSE) {
   out <- sample(base, prod(dim))
   if (isTRUE(sort)) {
@@ -195,7 +207,13 @@ generate_bingo <- function(dim = c(2, 3), base = 1:90, sort = FALSE) {
 
 
 
-bingo <- function(n, dim = c(2, 3), base = 1:90, sort = FALSE, seed = NULL) {
+
+
+
+
+
+
+bingo <- function(n, dim = c(2, 3), base = 1:90, sort = TRUE, seed = NULL) {
   if (is.null(seed)) seed <- abs(sample(.Random.seed, 1))
 
   set.seed(seed)
@@ -226,6 +244,10 @@ bingo <- function(n, dim = c(2, 3), base = 1:90, sort = FALSE, seed = NULL) {
     class = c("banko_list", class(l))
   )
 }
+
+
+
+
 
 
 
@@ -811,7 +833,7 @@ export_pdf <- function(list,
 
 
 ########
-#### Current file: R/gg_image.R 
+#### Current file: R/geom_image.R 
 ########
 
 library(ggplot2)
@@ -1405,25 +1427,6 @@ n_each_card <- function(cards, sequence = NULL) {
     }) |>
     purrr::list_c()
 }
-
-
-########
-#### Current file: R/visual.R 
-########
-
-
-
-f1 <- list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms",full.names = TRUE) |>
-  sample(10)
-
-d <- data.frame(
-  x = 1:10,
-  y = 1:10,
-  image=f1)
-
-ggplot2::ggplot(d, ggplot2::aes(x,y)) + geom_image(ggplot2::aes(image=image),size=.12)
-
-
 
 
 ########

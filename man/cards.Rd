@@ -18,6 +18,8 @@ list
 Creates n unique cards
 }
 \examples{
-cards(5) |> purrr::map(\(.x) attr(.x,which = "banko_seed")) |> unique()
-attr(cards(5),which = "banko_seed" )
+cards(5) |>
+  purrr::map(\(.x) attr(.x, which = "banko_seed")) |>
+  unique()
+attr(cards(5), which = "banko_seed")
 }

@@ -20,5 +20,5 @@ Base R style plotting
 \examples{
 cards(5) |> purrr::map(plot)
 
-cards(5)[[1]] |> plot()
+cards(1)[[1]] |> plot()
 }

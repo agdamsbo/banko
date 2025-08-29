@@ -28,4 +28,10 @@ data <- cards(5)[[1]]
 data |> gg_card()
 cards(5) |>
   purrr::map(gg_card)
+cards(5) |>
+  lapply(gg_card)
+bingo(5, base = LETTERS)[[1]] |> gg_card()
+bingo(2, base = list.files("/Users/au301842/Library/CloudStorage/OneDrive-Personal/Research/PhD/Formidling/Pictograms", full.names = TRUE))[[1]] |> gg_card()
+bingo(2, base = LETTERS, dim = c(2, 5))[[1]] |> gg_card()
+memory()[[1]] |> gg_card()
 }
